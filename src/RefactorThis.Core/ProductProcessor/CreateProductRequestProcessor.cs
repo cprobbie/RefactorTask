@@ -26,7 +26,15 @@ namespace RefactorThis.Core.Processor
                 throw new ArgumentException("Invalid input amount");
             }
 
-            _productRepository.Save(product);
+            var existingProduct = _productRepository.Get(product.Id);
+            if (existingProduct is null)
+            {
+                _productRepository.Save(product);
+            }
+            else
+            {
+                throw new ArgumentException("Product Id already exists");
+            }
         }
     }
 }

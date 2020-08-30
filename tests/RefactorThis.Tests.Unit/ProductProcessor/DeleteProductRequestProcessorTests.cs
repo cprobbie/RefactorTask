@@ -27,8 +27,8 @@ namespace RefactorThis.Core.Unit.Processor
         public void GiveValidId_ShouldDeleteProduct()
         {
             // Arrange
-            var existingProduct = new Product(Guid.NewGuid(), "iPad", "Apple tablet", 1000, 100);
-            _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(existingProduct);
+            var queryResult = new Product(Guid.NewGuid(), "iPad", "Apple tablet", 1000, 100);
+            _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(queryResult);
 
             // Act
             _SUT.DeleteProduct(It.IsAny<Guid>());

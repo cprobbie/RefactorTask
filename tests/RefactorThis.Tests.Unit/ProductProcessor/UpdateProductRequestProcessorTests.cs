@@ -30,8 +30,8 @@ namespace RefactorThis.Core.Unit.Processor
         {
             // Arrange
             var product = new Product(Guid.NewGuid(), "iPad", "Apple tablet", 1500, deliveryPrice);
-            var existingProduct = new Product(Guid.NewGuid(), "iPad", "Apple tablet", 1000, deliveryPrice);
-            _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(existingProduct);
+            var queryResult = new Product(Guid.NewGuid(), "iPad", "Apple tablet", 1000, deliveryPrice);
+            _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(queryResult);
 
             // Act
             _SUT.UpdateProduct(product);

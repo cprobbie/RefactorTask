@@ -59,5 +59,16 @@ namespace RefactorThis.Core.Unit.Processor
             // Act and Assert
             _SUT.Invoking(x => x.CreateProduct(product)).Should().Throw<ArgumentException>().WithMessage("Invalid input amount");
         }
+
+        [Test]
+        public void GivenIdAlreadyExists_ShouldThrowArgumentException()
+        {
+            // Arrange
+            var product = new Product(Guid.NewGuid(), "iPad", "Apple tablet", 2000, 10);
+            _productRepositoryMock.Setup(x => x.Get(product.Id)).Returns(product);
+
+            // Act and Assert
+            _SUT.Invoking(x => x.CreateProduct(product)).Should().Throw<ArgumentException>().WithMessage("Product Id already exists");
+        }
     }
 }

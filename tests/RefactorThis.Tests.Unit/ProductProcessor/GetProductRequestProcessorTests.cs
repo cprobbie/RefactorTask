@@ -8,6 +8,7 @@ using RefactorThis.Core.Processor;
 
 namespace RefactorThis.Core.Unit.Processor
 {
+    [TestFixture]
     public class GetProductRequestProcessorTests_GetProductById
     {
         private Mock<IProductRepository> _productRepo;
@@ -22,8 +23,10 @@ namespace RefactorThis.Core.Unit.Processor
         public void GivenValidId_ShouldReturnProduct()
         {
             // Arrange
-            var expectedProducts = new Product(Guid.NewGuid(), "iPad", "Apple tablet", 800, 15);
-            _productRepo.Setup(x => x.Get(It.IsAny<Guid>())).Returns(expectedProducts);
+            var id = Guid.NewGuid();
+            var expectedProduct = new Product(id, "iPad", "Apple tablet", 800, 15);
+            var queryResult = new Product(id, "iPad", "Apple tablet", 800, 15);
+            _productRepo.Setup(x => x.Get(It.IsAny<Guid>())).Returns(queryResult);
             var SUT = new GetProductRequestProcessor(_productRepo.Object);
 
             // Act
@@ -31,7 +34,7 @@ namespace RefactorThis.Core.Unit.Processor
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().BeEquivalentTo(expectedProducts);
+            result.Should().BeEquivalentTo(expectedProduct);
         }
 
         [Test]
