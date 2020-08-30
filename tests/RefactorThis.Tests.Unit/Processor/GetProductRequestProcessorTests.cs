@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -34,6 +32,20 @@ namespace RefactorThis.Core.Unit.Processor
             // Assert
             result.Should().NotBeNull();
             result.Should().BeEquivalentTo(expectedProducts);
+        }
+
+        [Test]
+        public void GivenIdNonExists_ShouldReturnNull()
+        {
+            // Arrange
+            _productRepo.Setup(x => x.Get(It.IsAny<Guid>())).Returns((Product)null);
+            var SUT = new GetProductRequestProcessor(_productRepo.Object);
+
+            // Act
+            var result = SUT.GetProductById(It.IsAny<Guid>());
+
+            // Assert
+            result.Should().BeNull();
         }
     }
 }
