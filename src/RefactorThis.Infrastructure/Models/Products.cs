@@ -3,12 +3,9 @@ using System.Collections.Generic;
 
 namespace RefactorThis.Infrastructure.Models
 {
-    public class Product
+    public class Product : ModelBase
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
         public decimal Price { get; set; }
-        public decimal DeliveryPrice { get; set; 
+        public decimal DeliveryPrice { get; set; }
     }
 }

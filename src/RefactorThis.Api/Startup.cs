@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using RefactorThis.Api;
+using RefactorThis.Core.Interfaces;
 using RefactorThis.Infrastructure;
 
 namespace RefactorThis
@@ -27,13 +28,14 @@ namespace RefactorThis
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ProductDbContext>(options =>
             {
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
             });
+            services.AddScoped<IProductRepository, ProductRepository>();
+
             services.AddControllers(options => 
             { 
                 options.Filters.Add(typeof(ExceptionFilter)); 
@@ -41,7 +43,6 @@ namespace RefactorThis
             Core.Bootstrap.ConfigureServices(services);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app,  IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -50,7 +51,6 @@ namespace RefactorThis
             }
             else
             {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 

@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Text.Json.Serialization;
 
 namespace RefactorThis.Infrastructure.Models
 {
-    public class ProductOption : BaseModel
+    public class ProductOption : ModelBase
     {
         public Guid ProductId { get; set; }
     }

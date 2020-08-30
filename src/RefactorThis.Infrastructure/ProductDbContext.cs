@@ -1,6 +1,7 @@
-﻿using System;
-
+﻿
 using Microsoft.EntityFrameworkCore;
+
+using RefactorThis.Infrastructure.Models;
 
 namespace RefactorThis.Infrastructure
 {
@@ -9,6 +10,8 @@ namespace RefactorThis.Infrastructure
         public ProductDbContext(DbContextOptions<ProductDbContext> options)
             : base(options){}
 
-        public DbSet<Product> Product { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductOption> ProductOptions { get; set; }
     }
+
 }
