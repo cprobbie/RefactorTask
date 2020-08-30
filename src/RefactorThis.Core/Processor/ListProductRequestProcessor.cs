@@ -18,5 +18,14 @@ namespace RefactorThis.Core.Processor
         {
             return _productRepository.List();
         }
+
+        public Products ListProducts(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("Invalid Product name");
+            }
+            return _productRepository.List(name);
+        }
     }
 }
