@@ -12,6 +12,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
+using RefactorThis.Api;
+
 namespace RefactorThis
 {
     public class Startup
@@ -26,7 +28,10 @@ namespace RefactorThis
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers(options => 
+            { 
+                options.Filters.Add(typeof(ExceptionFilter)); 
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
