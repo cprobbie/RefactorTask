@@ -32,7 +32,7 @@ namespace RefactorThis
         {
             services.AddDbContext<ProductDbContext>(options =>
             {
-                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlite(Configuration.GetConnectionString("Sqlite"));
             });
             services.AddScoped<IProductRepository, ProductRepository>();
 
