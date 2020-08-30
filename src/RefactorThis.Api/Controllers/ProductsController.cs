@@ -2,6 +2,7 @@
 
 using Microsoft.AspNetCore.Mvc;
 
+using RefactorThis.Api.DTOs;
 using RefactorThis.Core.Domain;
 using RefactorThis.Core.Processor;
 
@@ -32,7 +33,8 @@ namespace RefactorThis.Controllers
         public IActionResult Get([FromQuery]string name)
         {
             var products = _getProductRequestProcessor.ListProducts(name);
-            return Ok(products);
+            var productsDto = new ProductsDTO(products);
+            return Ok(productsDto);
         }
 
         [HttpGet("{id}")]
