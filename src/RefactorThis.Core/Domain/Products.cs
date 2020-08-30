@@ -5,14 +5,34 @@ namespace RefactorThis.Core.Domain
 {
     public class Products
     {
-        public List<Product> Items { get; set; }
+        public Products()
+        {
+
+        }
+        public Products(List<Product> items)
+        {
+            Items = items;
+        }
+        public List<Product> Items { get; }
     }
     public class Product
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public decimal Price { get; set; }
-        public decimal DeliveryPrice { get; set; }
+        public Product()
+        {
+
+        }
+        public Product(Guid id, string name, string description, decimal price, decimal deliveryPrice)
+        {
+            Id = id;
+            Name = name;
+            Description = description;
+            Price = price;
+            DeliveryPrice = deliveryPrice;
+        }
+        public Guid Id { get; }
+        public string Name { get; }
+        public string Description { get; }
+        public decimal Price { get; }
+        public decimal DeliveryPrice { get; }
     }
 }

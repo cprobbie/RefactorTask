@@ -16,6 +16,12 @@ namespace RefactorThis.Controllers
             return new Products();
         }
 
+        [HttpGet]
+        public Products Get([FromQuery]string name)
+        {
+            return new Products();
+        }
+
         [HttpGet("{id}")]
         public Product Get(Guid id)
         {
