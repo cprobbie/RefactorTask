@@ -5,11 +5,11 @@ using RefactorThis.Core.Interfaces;
 
 namespace RefactorThis.Core.OptionProcessor
 {
-    public class ListOptionsRequestProcessor
+    public class GetOptionsRequestProcessor
     {
         private IProductRepository _productRepository;
 
-        public ListOptionsRequestProcessor(IProductRepository productRepository)
+        public GetOptionsRequestProcessor(IProductRepository productRepository)
         {
             _productRepository = productRepository;
         }
@@ -17,6 +17,11 @@ namespace RefactorThis.Core.OptionProcessor
         public ProductOptions ListOptions(Guid productId)
         {
             return _productRepository.ListOptions(productId);
+        }
+
+        public ProductOption GetOptionById(Guid productId, Guid optionId)
+        {
+            return _productRepository.GetOption(productId, optionId);
         }
     }
 }

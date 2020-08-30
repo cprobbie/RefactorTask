@@ -12,5 +12,6 @@ namespace RefactorThis.Core.Interfaces
         public void Update(Product product);
         public void Delete(Guid id);
         public ProductOptions ListOptions(Guid productId);
+        public ProductOption GetOption(Guid productId, Guid optionId);
     }
 }
