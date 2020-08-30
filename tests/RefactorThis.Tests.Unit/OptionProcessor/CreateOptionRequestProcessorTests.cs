@@ -19,6 +19,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
         private Mock<IProductRepository> _productRepositoryMock;
         private CreateOptionRequestProcessor _SUT;
         private ProductOption _option;
+        private Product _product;
 
         [SetUp]
         public void Setup()
@@ -32,8 +33,12 @@ namespace RefactorThis.Core.Unit.OptionProcessor
         [Test]
         public void GiveValidInputs_ShouldSaveProductOption()
         {
+            // Arrange
+            _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(_product);
+            _productRepositoryMock.Setup(x => x.GetOption(It.IsAny<Guid>(), _option.Id)).Returns((ProductOption)null);
+
             // Act
-            _SUT.CreateProductOption(It.IsAny<Guid>(), _option);
+            _SUT.CreateProductOption(_product.Id, _option);
             // Assert
             _productRepositoryMock.Verify(x => x.Save(_option), Times.Once);
         }
@@ -43,6 +48,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
         public void GivenInvalidString_ShouldThrowArgumentException(string name, string description)
         {
             // Arrange
+            _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(_product);
             var option = new ProductOption(Guid.NewGuid(), name, description);
 
             // Act and Assert
@@ -65,8 +71,8 @@ namespace RefactorThis.Core.Unit.OptionProcessor
         public void GivenOptionIdAlreadyExists_ShouldThrowArgumentException()
         {
             // Arrange
-            var product = new Product(Guid.NewGuid(), "iPad", "Apple tablet", 3000, 20);
-            _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(product);
+            _product = new Product(Guid.NewGuid(), "iPad", "Apple tablet", 3000, 20);
+            _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(_product);
             _productRepositoryMock.Setup(x => x.GetOption(It.IsAny<Guid>(), _option.Id)).Returns(_option);
 
             // Act and Assert

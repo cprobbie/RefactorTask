@@ -31,8 +31,11 @@ namespace RefactorThis.Core.Unit.OptionProcessor
         [Test]
         public void GiveValidInputs_ShouldUpdateProductOption()
         {
+            // Arrange
+            _productRepositoryMock.Setup(x => x.GetOption(It.IsAny<Guid>(), _option.Id)).Returns(_option);
+
             // Act
-            _SUT.UpdateProductOption(It.IsAny<Guid>(), It.IsAny<Guid>(), _option);
+            _SUT.UpdateProductOption(It.IsAny<Guid>(), _option.Id, _option);
 
             // Assert
             _productRepositoryMock.Verify(x => x.Update(_option), Times.Once);
@@ -43,6 +46,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
         public void GivenInvalidString_ShouldThrowArgumentException(string name, string description)
         {
             // Arrange
+            _productRepositoryMock.Setup(x => x.GetOption(It.IsAny<Guid>(), _option.Id)).Returns(_option);
             var option = new ProductOption(Guid.NewGuid(), name, description);
 
             // Act and Assert
