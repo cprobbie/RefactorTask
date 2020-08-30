@@ -13,6 +13,19 @@ namespace RefactorThis.Core.Processor
         {
             _productRepository = productRepository;
         }
+        public Products ListProducts()
+        {
+            return _productRepository.List();
+        }
+
+        public Products ListProducts(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("Invalid Product name");
+            }
+            return _productRepository.List(name);
+        }
 
         public Product GetProductById(Guid id)
         {

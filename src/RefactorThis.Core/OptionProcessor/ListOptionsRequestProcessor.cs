@@ -16,7 +16,6 @@ namespace RefactorThis.Core.OptionProcessor
 
         public ProductOptions ListOptions(Guid productId)
         {
-
             return _productRepository.ListOptions(productId);
         }
     }
