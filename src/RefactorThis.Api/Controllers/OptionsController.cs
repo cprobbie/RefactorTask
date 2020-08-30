@@ -2,6 +2,7 @@
 
 using Microsoft.AspNetCore.Mvc;
 
+using RefactorThis.Api.DTOs;
 using RefactorThis.Core.Domain;
 using RefactorThis.Core.OptionProcessor;
 
@@ -32,7 +33,8 @@ namespace RefactorThis.Api.Controllers
         public IActionResult GetOptions(Guid id)
         {
             var options = _getOptionsRequestProcessor.ListOptions(id);
-            return Ok(options);
+            var optionsDTO = new ProductOptionsDTO(options);
+            return Ok(optionsDTO);
         }
 
         [HttpGet("{optionId}")]
