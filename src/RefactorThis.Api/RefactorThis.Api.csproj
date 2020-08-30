@@ -11,5 +11,6 @@
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\RefactorThis.Core\RefactorThis.Core.csproj" />
+      <ProjectReference Include="..\RefactorThis.Infrastructure\RefactorThis.Infrastructure.csproj" />
     </ItemGroup>
 </Project>
