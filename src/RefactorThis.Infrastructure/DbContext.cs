@@ -2,7 +2,7 @@
 
 namespace RefactorThis.Infrastructure
 {
-    public class Class1
+    public class DbContext
     {
     }
 }

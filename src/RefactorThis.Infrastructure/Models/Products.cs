@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace RefactorThis.Models
+namespace RefactorThis.Infrastructure.Models
 {
     public class Products
     {
@@ -70,7 +70,7 @@ namespace RefactorThis.Models
             IsNew = false;
             Id = Guid.Parse(rdr["Id"].ToString());
             Name = rdr["Name"].ToString();
-            Description = (DBNull.Value == rdr["Description"]) ? null : rdr["Description"].ToString();
+            Description = DBNull.Value == rdr["Description"] ? null : rdr["Description"].ToString();
             Price = decimal.Parse(rdr["Price"].ToString());
             DeliveryPrice = decimal.Parse(rdr["DeliveryPrice"].ToString());
         }
@@ -170,7 +170,7 @@ namespace RefactorThis.Models
             Id = Guid.Parse(rdr["Id"].ToString());
             ProductId = Guid.Parse(rdr["ProductId"].ToString());
             Name = rdr["Name"].ToString();
-            Description = (DBNull.Value == rdr["Description"]) ? null : rdr["Description"].ToString();
+            Description = DBNull.Value == rdr["Description"] ? null : rdr["Description"].ToString();
         }
 
         public void Save()
