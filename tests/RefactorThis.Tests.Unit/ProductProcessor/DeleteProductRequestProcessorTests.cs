@@ -31,20 +31,20 @@ namespace RefactorThis.Core.Unit.Processor
             _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(existingProduct);
 
             // Act
-            _SUT.DeleteProduct(It.IsAny<Guid>);
+            _SUT.DeleteProduct(It.IsAny<Guid>());
 
             // Assert
             _productRepositoryMock.Verify(x => x.Delete(It.IsAny<Guid>()), Times.Once);
         }
 
         [Test]
-        public void GivenProductNotExists_ShouldThrowException()
+        public void GivenProductNotExists_ShouldThrowKeyNotFoundException()
         {
             // Arrange
             _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns((Product)null);
 
             // Act and Assert
-            _SUT.Invoking(x => x.DeleteProduct(It.IsAny<Guid>)).Should().Throw<KeyNotFoundException>().WithMessage("Product not found");
+            _SUT.Invoking(x => x.DeleteProduct(It.IsAny<Guid>())).Should().Throw<KeyNotFoundException>().WithMessage("Product not found");
         }
     }
 }

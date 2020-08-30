@@ -9,7 +9,8 @@ namespace RefactorThis.Core.Interfaces
         public void Save(Product product);
         public Products List(string name);
         public Product Get(Guid id);
-        void Update(Product product);
-        void Delete(Guid guid);
+        public void Update(Product product);
+        public void Delete(Guid id);
+        public ProductOptions ListOptions(Guid productId);
     }
 }

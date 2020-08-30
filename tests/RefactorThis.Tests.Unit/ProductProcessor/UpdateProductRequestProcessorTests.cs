@@ -65,7 +65,7 @@ namespace RefactorThis.Core.Unit.Processor
         }
 
         [Test]
-        public void GivenProductNotExist_ShouldThrowException()
+        public void GivenProductNotExist_ShouldThrowKeyNotFoundException()
         {
             // Arrange
             var product = new Product(Guid.NewGuid(), "iPad", "Apple tablet", 1000, 10);
