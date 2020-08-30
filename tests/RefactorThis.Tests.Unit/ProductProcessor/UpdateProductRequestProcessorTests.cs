@@ -34,7 +34,7 @@ namespace RefactorThis.Core.Unit.Processor
             _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(queryResult);
 
             // Act
-            _SUT.UpdateProduct(product);
+            _SUT.UpdateProduct(product.Id, product);
 
             // Assert
             _productRepositoryMock.Verify(x => x.Update(product), Times.Once);
@@ -49,7 +49,7 @@ namespace RefactorThis.Core.Unit.Processor
             _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(It.IsAny<Product>);
 
             // Act and Assert
-            _SUT.Invoking(x => x.UpdateProduct(product)).Should().Throw<ArgumentException>().WithMessage("Invalid input string");
+            _SUT.Invoking(x => x.UpdateProduct(product.Id, product)).Should().Throw<ArgumentException>().WithMessage("Invalid input string");
         }
 
         [TestCase(-1, 199)]
@@ -61,7 +61,7 @@ namespace RefactorThis.Core.Unit.Processor
             _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(It.IsAny<Product>);
 
             // Act and Assert
-            _SUT.Invoking(x => x.UpdateProduct(product)).Should().Throw<ArgumentException>().WithMessage("Invalid input amount");
+            _SUT.Invoking(x => x.UpdateProduct(product.Id, product)).Should().Throw<ArgumentException>().WithMessage("Invalid input amount");
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace RefactorThis.Core.Unit.Processor
             _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns((Product)null);
 
             // Act and Assert
-            _SUT.Invoking(x => x.UpdateProduct(product)).Should().Throw<KeyNotFoundException>().WithMessage("Product not found");
+            _SUT.Invoking(x => x.UpdateProduct(product.Id, product)).Should().Throw<KeyNotFoundException>().WithMessage("Product not found");
         }
     }
 }
