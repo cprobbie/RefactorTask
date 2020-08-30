@@ -10,7 +10,7 @@ using RefactorThis.Core.Processor;
 
 namespace RefactorThis.Core.Unit.Processor
 {
-    public class GetProductsRequestProcessorTests
+    public class ListProductsRequestProcessorTests
     {
         private Mock<IProductRepository> _productRepo;
 
