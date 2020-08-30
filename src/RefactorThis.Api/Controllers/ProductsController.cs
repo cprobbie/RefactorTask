@@ -3,105 +3,71 @@
 using Microsoft.AspNetCore.Mvc;
 
 using RefactorThis.Core.Domain;
+using RefactorThis.Core.Processor;
 
 namespace RefactorThis.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        [HttpGet]
-        public Products Get()
+        private readonly ICreateProductRequestProcessor _createProductRequestProcessor;
+        private readonly IGetProductRequestProcessor _getProductRequestProcessor;
+        private readonly IUpdateProductRequestProcessor _updateProductRequestProcessor;
+        private readonly IDeleteProductRequestProcessor _deleteProductRequestProcessor;
+
+        public ProductsController(
+            ICreateProductRequestProcessor createProductRequestProcessor, 
+            IGetProductRequestProcessor getProductRequestProcessor,
+            IUpdateProductRequestProcessor updateProductRequestProcessor,
+            IDeleteProductRequestProcessor deleteProductRequestProcessor)
         {
-            return new Products();
+            _createProductRequestProcessor = createProductRequestProcessor;
+            _getProductRequestProcessor = getProductRequestProcessor;
+            _updateProductRequestProcessor = updateProductRequestProcessor;
+            _deleteProductRequestProcessor = deleteProductRequestProcessor;
         }
 
         [HttpGet]
-        public Products Get([FromQuery]string name)
+        public IActionResult Get()
         {
-            return new Products();
+            var products = _getProductRequestProcessor.ListProducts();
+            return Ok(products);
+        }
+
+        [HttpGet]
+        public IActionResult Get([FromQuery]string name)
+        {
+            var products = _getProductRequestProcessor.ListProducts(name);
+            return Ok(products);
         }
 
         [HttpGet("{id}")]
-        public Product Get(Guid id)
+        public IActionResult Get(Guid id)
         {
-            //var product = new Product(id);
-            //if (product.IsNew)
-            //    throw new Exception();
-
-            //return product;
-            return new Product();
+            var product = _getProductRequestProcessor.GetProductById(id);
+            return Ok(product);
         }
 
         [HttpPost]
-        public void Post(Product product)
+        public IActionResult Post([FromBody]Product product)
         {
-            //product.Save();
+            _createProductRequestProcessor.CreateProduct(product);
+            return Ok();
         }
 
         [HttpPut("{id}")]
-        public void Update(Guid id, Product product)
+        public IActionResult Update(Guid id, [FromBody]Product product)
         {
-            //var orig = new Product(id)
-            //{
-            //    Name = product.Name,
-            //    Description = product.Description,
-            //    Price = product.Price,
-            //    DeliveryPrice = product.DeliveryPrice
-            //};
-
-            //if (!orig.IsNew)
-            //    orig.Save();
+            _updateProductRequestProcessor.UpdateProduct(id, product);
+            return Ok();
         }
 
         [HttpDelete("{id}")]
-        public void Delete(Guid id)
+        public IActionResult Delete(Guid id)
         {
-            //var product = new Product(id);
-            //product.Delete();
-        }
-
-        [HttpGet("{productId}/options")]
-        public ProductOptions GetOptions(Guid productId)
-        {
-            return null;
-        }
-
-        [HttpGet("{productId}/options/{id}")]
-        public ProductOption GetOption(Guid productId, Guid id)
-        {
-            //var option = new ProductOption(id);
-            //if (option.IsNew)
-            //    throw new Exception();
-
-            return null;
-        }
-
-        [HttpPost("{productId}/options")]
-        public void CreateOption(Guid productId, ProductOption option)
-        {
-            //option.ProductId = productId;
-            //option.Save();
-        }
-
-        [HttpPut("{productId}/options/{id}")]
-        public void UpdateOption(Guid id, ProductOption option)
-        {
-            //var orig = new ProductOption(id)
-            //{
-            //    Name = option.Name,
-            //    Description = option.Description
-            //};
-
-            //if (!orig.IsNew)
-            //    orig.Save();
-        }
-
-        [HttpDelete("{productId}/options/{id}")]
-        public void DeleteOption(Guid id)
-        {
-            //var opt = new ProductOption(id);
-            //opt.Delete();
+            _deleteProductRequestProcessor.DeleteProduct(id);
+            return Ok();
         }
     }
 }
