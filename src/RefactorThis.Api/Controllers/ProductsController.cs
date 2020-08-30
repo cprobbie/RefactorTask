@@ -29,13 +29,6 @@ namespace RefactorThis.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
-        {
-            var products = _getProductRequestProcessor.ListProducts();
-            return Ok(products);
-        }
-
-        [HttpGet]
         public IActionResult Get([FromQuery]string name)
         {
             var products = _getProductRequestProcessor.ListProducts(name);

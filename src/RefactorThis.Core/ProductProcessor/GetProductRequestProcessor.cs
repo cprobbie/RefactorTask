@@ -7,7 +7,6 @@ namespace RefactorThis.Core.Processor
 {
     public interface IGetProductRequestProcessor
     {
-        Products ListProducts();
         Products ListProducts(string name);
         Product GetProductById(Guid id);
     }
@@ -19,16 +18,12 @@ namespace RefactorThis.Core.Processor
         {
             _productRepository = productRepository;
         }
-        public Products ListProducts()
-        {
-            return _productRepository.List();
-        }
 
         public Products ListProducts(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentException("Invalid Product name");
+                return _productRepository.List();
             }
             return _productRepository.List(name);
         }

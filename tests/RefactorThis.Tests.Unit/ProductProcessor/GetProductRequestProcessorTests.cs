@@ -12,45 +12,6 @@ using RefactorThis.Core.Processor;
 namespace RefactorThis.Core.Unit.Processor
 {
     [TestFixture]
-    public class GetProductsRequestProcessorTests_ListProducts
-    {
-        private Mock<IProductRepository> _productRepo;
-
-        [Test]
-        public void ShouldReturnExpectedProductsResult()
-        {
-            // Arrange
-            var id1 = Guid.NewGuid();
-            var id2 = Guid.NewGuid();
-            var productItems = new List<Product>
-            {
-                new Product(id1, "iPad", "Apple tablet", 1500, 10),
-                new Product(id2, "MacBook", "Apple laptop", 2000, 15)
-            };
-            var expectedProducts = new Products(productItems);
-
-            var queryItems = new List<Product>
-            {
-                new Product(id1, "iPad", "Apple tablet", 1500, 10),
-                new Product(id2, "MacBook", "Apple laptop", 2000, 15)
-            };
-            var queryResult = new Products(productItems);
-
-            _productRepo = new Mock<IProductRepository>();
-            _productRepo.Setup(x => x.List()).Returns(queryResult);
-            var SUT = new GetProductRequestProcessor(_productRepo.Object);
-
-            // Act
-            var result = SUT.ListProducts();
-
-            // Assert
-            result.Should().NotBeNull();
-            result.Items.Single(x => x.Id == id1).Should().BeEquivalentTo(expectedProducts.Items.Single(x => x.Id == id1));
-            result.Items.Single(x => x.Id == id2).Should().BeEquivalentTo(expectedProducts.Items.Single(x => x.Id == id2));
-        }
-    }
-
-    [TestFixture]
     public class GetProductsRequestProcessorTests_ListProductsByName
     {
         private Mock<IProductRepository> _productRepo;
@@ -102,15 +63,36 @@ namespace RefactorThis.Core.Unit.Processor
         }
 
         [Test]
-        public void GivenProductNameNullOrEmpty_ShouldThrowArgumentException()
+        public void GivenProductNameNullOrEmpty_ShouldListAllProducts()
         {
             // Arrange
-            _productRepo.Setup(x => x.List(It.IsAny<string>()));
+            var id1 = Guid.NewGuid();
+            var id2 = Guid.NewGuid();
+            var productItems = new List<Product>
+            {
+                new Product(id1, "iPad", "Apple tablet", 1500, 10),
+                new Product(id2, "MacBook", "Apple laptop", 2000, 15)
+            };
+            var expectedProducts = new Products(productItems);
+
+            var queryItems = new List<Product>
+            {
+                new Product(id1, "iPad", "Apple tablet", 1500, 10),
+                new Product(id2, "MacBook", "Apple laptop", 2000, 15)
+            };
+            var queryResult = new Products(productItems);
+
+            _productRepo = new Mock<IProductRepository>();
+            _productRepo.Setup(x => x.List()).Returns(queryResult);
             var SUT = new GetProductRequestProcessor(_productRepo.Object);
 
             // Act
+            var result = SUT.ListProducts(null);
+
             // Assert
-            SUT.Invoking(x => x.ListProducts(null)).Should().Throw<ArgumentException>().WithMessage("Invalid Product name");
+            result.Should().NotBeNull();
+            result.Items.Single(x => x.Id == id1).Should().BeEquivalentTo(expectedProducts.Items.Single(x => x.Id == id1));
+            result.Items.Single(x => x.Id == id2).Should().BeEquivalentTo(expectedProducts.Items.Single(x => x.Id == id2));
         }
     }
     [TestFixture]
