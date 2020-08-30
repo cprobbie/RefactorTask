@@ -20,7 +20,7 @@ namespace RefactorThis.Core.Unit.Processor
         {
             _productRepositoryMock = new Mock<IProductRepository>();
             _SUT = new DeleteProductRequestProcessor(_productRepositoryMock.Object);
-            _productRepositoryMock.Setup(x => x.Delete(It.IsAny<Guid>()));
+            _productRepositoryMock.Setup(x => x.DeleteProduct(It.IsAny<Guid>()));
         }
 
         [Test]
@@ -34,7 +34,7 @@ namespace RefactorThis.Core.Unit.Processor
             _SUT.DeleteProduct(It.IsAny<Guid>());
 
             // Assert
-            _productRepositoryMock.Verify(x => x.Delete(It.IsAny<Guid>()), Times.Once);
+            _productRepositoryMock.Verify(x => x.DeleteProduct(It.IsAny<Guid>()), Times.Once);
         }
 
         [Test]

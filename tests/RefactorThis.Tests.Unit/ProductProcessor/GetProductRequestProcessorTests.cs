@@ -26,19 +26,17 @@ namespace RefactorThis.Core.Unit.Processor
         {
             // Arrange
             var id = Guid.NewGuid();
-            var productItems = new List<Product>
+            var expectedProducts = new List<Product>
             {
                 new Product(id, "iPad", "Apple tablet", 1500, 10)
             };
-            var expectedProducts = new Products(productItems);
 
-            var queryItems = new List<Product>
+            var queryResult = new List<Product>
             {
                 new Product(id, "iPad", "Apple tablet", 1500, 10)
             };
-            var queryProducts = new Products(productItems);
 
-            _productRepo.Setup(x => x.List(It.IsAny<string>())).Returns(queryProducts);
+            _productRepo.Setup(x => x.List(It.IsAny<string>())).Returns(queryResult);
             var SUT = new GetProductRequestProcessor(_productRepo.Object);
 
             // Act
@@ -46,14 +44,14 @@ namespace RefactorThis.Core.Unit.Processor
 
             // Assert
             result.Should().NotBeNull();
-            result.Items.Single().Should().BeEquivalentTo(expectedProducts.Items.Single());
+            result.Single().Should().BeEquivalentTo(expectedProducts.Single());
         }
 
         [Test]
         public void GivenProductNameNonExists_ShouldReturnNull()
         {
             // Arrange
-            _productRepo.Setup(x => x.List(It.IsAny<string>())).Returns((Products)null);
+            _productRepo.Setup(x => x.List(It.IsAny<string>())).Returns((IList<Product>)null);
             var SUT = new GetProductRequestProcessor(_productRepo.Object);
 
             // Act
@@ -68,19 +66,17 @@ namespace RefactorThis.Core.Unit.Processor
             // Arrange
             var id1 = Guid.NewGuid();
             var id2 = Guid.NewGuid();
-            var productItems = new List<Product>
+            var expectedProducts = new List<Product>
             {
                 new Product(id1, "iPad", "Apple tablet", 1500, 10),
                 new Product(id2, "MacBook", "Apple laptop", 2000, 15)
             };
-            var expectedProducts = new Products(productItems);
 
-            var queryItems = new List<Product>
+            var queryResult = new List<Product>
             {
                 new Product(id1, "iPad", "Apple tablet", 1500, 10),
                 new Product(id2, "MacBook", "Apple laptop", 2000, 15)
             };
-            var queryResult = new Products(productItems);
 
             _productRepo = new Mock<IProductRepository>();
             _productRepo.Setup(x => x.List()).Returns(queryResult);
@@ -91,8 +87,8 @@ namespace RefactorThis.Core.Unit.Processor
 
             // Assert
             result.Should().NotBeNull();
-            result.Items.Single(x => x.Id == id1).Should().BeEquivalentTo(expectedProducts.Items.Single(x => x.Id == id1));
-            result.Items.Single(x => x.Id == id2).Should().BeEquivalentTo(expectedProducts.Items.Single(x => x.Id == id2));
+            result.Single(x => x.Id == id1).Should().BeEquivalentTo(expectedProducts.Single(x => x.Id == id1));
+            result.Single(x => x.Id == id2).Should().BeEquivalentTo(expectedProducts.Single(x => x.Id == id2));
         }
     }
     [TestFixture]

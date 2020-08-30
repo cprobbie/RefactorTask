@@ -1,17 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
+
 using RefactorThis.Core.Domain;
 
 namespace RefactorThis.Core.Interfaces
 {
     public interface IProductRepository
     {
-        public Products List();
+        public IList<Product> List();
         public void Save(Product product);
-        public Products List(string name);
+        public IList<Product> List(string name);
         public Product Get(Guid id);
         public void Update(Product product);
-        public void Delete(Guid id);
-        public ProductOptions ListOptions(Guid productId);
+        public void DeleteProduct(Guid productId);
+        public void DeleteOption(Guid optionId);
+        public IList<ProductOption> ListOptions(Guid productId);
         public ProductOption GetOption(Guid productId, Guid optionId);
         public void Save(ProductOption productOption);
         public void Update(ProductOption option);

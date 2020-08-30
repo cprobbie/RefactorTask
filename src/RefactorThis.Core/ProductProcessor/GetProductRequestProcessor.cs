@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 using RefactorThis.Core.Domain;
 using RefactorThis.Core.Interfaces;
@@ -7,7 +9,7 @@ namespace RefactorThis.Core.Processor
 {
     public interface IGetProductRequestProcessor
     {
-        Products ListProducts(string name);
+        IList<Product> ListProducts(string name);
         Product GetProductById(Guid id);
     }
     public class GetProductRequestProcessor : IGetProductRequestProcessor
@@ -19,7 +21,7 @@ namespace RefactorThis.Core.Processor
             _productRepository = productRepository;
         }
 
-        public Products ListProducts(string name)
+        public IList<Product> ListProducts(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
             {

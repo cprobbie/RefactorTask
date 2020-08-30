@@ -38,7 +38,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
             _SUT.DeleteProductOption(It.IsAny<Guid>(), _option.Id);
 
             // Assert
-            _productRepositoryMock.Verify(x => x.Delete(It.IsAny<Guid>()), Times.Once);
+            _productRepositoryMock.Verify(x => x.DeleteOption(It.IsAny<Guid>()), Times.Once);
         }
 
         [Test]

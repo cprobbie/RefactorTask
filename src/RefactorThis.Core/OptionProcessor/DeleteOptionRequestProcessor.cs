@@ -26,7 +26,7 @@ namespace RefactorThis.Core.OptionProcessor
             {
                 throw new ArgumentException("Product Option not found");
             }
-            _productRepository.Delete(optionId);
+            _productRepository.DeleteOption(optionId);
         }
     }
 }

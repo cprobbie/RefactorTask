@@ -1,18 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace RefactorThis.Core.Domain
 {
-    public class ProductOptions
-    {
-        public ProductOptions(List<ProductOption> items)
-        {
-            Items = items;
-        }
-        public List<ProductOption> Items { get; }
-    }
-
     public class ProductOption
     {
         public ProductOption(Guid id, string name, string description)
@@ -21,8 +13,10 @@ namespace RefactorThis.Core.Domain
             Name = name;
             Description = description;
         }
-        public Guid Id { get; }
-        public string Name { get; }
-        public string Description { get; }
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        [JsonIgnore]
+        public Guid ProductId { get; set; }
     }
 }

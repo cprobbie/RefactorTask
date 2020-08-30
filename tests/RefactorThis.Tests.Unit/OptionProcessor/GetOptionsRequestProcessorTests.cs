@@ -27,19 +27,19 @@ namespace RefactorThis.Core.Unit.Processor
             // Arrange
             var id1 = Guid.NewGuid();
             var id2 = Guid.NewGuid();
-            var expectedOptionItems = new List<ProductOption>
-            {
-                new ProductOption(id1, "32G", "32G storage"),
-                new ProductOption(id2, "64G", "64G storage")
-            };
-            var expectedOptions = new ProductOptions(expectedOptionItems);
 
-            var queryResultItem = new List<ProductOption>
+            var expectedOptions = new List<ProductOption>
             {
                 new ProductOption(id1, "32G", "32G storage"),
                 new ProductOption(id2, "64G", "64G storage")
             };
-            var queryResult = new ProductOptions(queryResultItem);
+            
+            var queryResult = new List<ProductOption>
+            {
+                new ProductOption(id1, "32G", "32G storage"),
+                new ProductOption(id2, "64G", "64G storage")
+            };
+            
 
             var SUT = new GetOptionsRequestProcessor(_productRepositoryMock.Object);
             _productRepositoryMock.Setup(x => x.ListOptions(It.IsAny<Guid>())).Returns(queryResult);
@@ -57,7 +57,7 @@ namespace RefactorThis.Core.Unit.Processor
         {
             // Arrange
             var SUT = new GetOptionsRequestProcessor(_productRepositoryMock.Object);
-            _productRepositoryMock.Setup(x => x.ListOptions(It.IsAny<Guid>())).Returns((ProductOptions)null);
+            _productRepositoryMock.Setup(x => x.ListOptions(It.IsAny<Guid>())).Returns((IList<ProductOption>)null);
             // Act
             var result = SUT.ListOptions(It.IsAny<Guid>());
 

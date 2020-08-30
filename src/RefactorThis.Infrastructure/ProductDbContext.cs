@@ -1,7 +1,6 @@
-﻿
+﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-
-using RefactorThis.Infrastructure.Models;
+using RefactorThis.Core.Domain;
 
 namespace RefactorThis.Infrastructure
 {
@@ -12,6 +11,12 @@ namespace RefactorThis.Infrastructure
 
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductOption> ProductOptions { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Product>().HasKey(x => x.Id);
+            modelBuilder.Entity<ProductOption>().HasKey(x => x.Id);
+        }
     }
 
 }

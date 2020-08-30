@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+
+using Microsoft.EntityFrameworkCore;
 
 using RefactorThis.Core.Domain;
 using RefactorThis.Core.Interfaces;
+
 
 namespace RefactorThis.Infrastructure
 {
@@ -15,54 +18,69 @@ namespace RefactorThis.Infrastructure
         {
             _dbContext = dbContext;
         }
-        public void Delete(Guid id)
+
+        public IList<Product> List()
         {
-            throw new NotImplementedException();
+            return _dbContext.Products.ToList();
         }
 
+        public IList<Product> List(string name)
+        {
+            return _dbContext.Products.Where(x => x.Name.ToLower() == name.ToLower()).ToList();
+        }
+
+        public IList<ProductOption> ListOptions(Guid productId)
+        {
+            return _dbContext.ProductOptions.Where(x => x.ProductId == productId).ToList();
+        }
         public Product Get(Guid id)
         {
-            throw new NotImplementedException();
+            return _dbContext.Products.SingleOrDefault(x => x.Id == id);
         }
 
         public ProductOption GetOption(Guid productId, Guid optionId)
         {
-            throw new NotImplementedException();
-        }
-
-        public Products List()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Products List(string name)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ProductOptions ListOptions(Guid productId)
-        {
-            throw new NotImplementedException();
+            return _dbContext.ProductOptions.SingleOrDefault(x => x.ProductId == productId && x.Id == optionId);
         }
 
         public void Save(Product product)
         {
-            throw new NotImplementedException();
+            _dbContext.Products.Add(product);
+            _dbContext.SaveChanges();
         }
 
         public void Save(ProductOption productOption)
         {
-            throw new NotImplementedException();
+            _dbContext.ProductOptions.Add(productOption);
+            _dbContext.SaveChanges();
         }
 
         public void Update(Product product)
         {
-            throw new NotImplementedException();
+            _dbContext.Entry(product).State = EntityState.Modified;
+            _dbContext.SaveChanges();
         }
 
         public void Update(ProductOption option)
         {
-            throw new NotImplementedException();
+            _dbContext.Entry(option).State = EntityState.Modified;
+            _dbContext.SaveChanges();
         }
+        public void DeleteProduct(Guid id)
+        {
+            var product = _dbContext.Products.Find(id);
+            _dbContext.Attach(product);
+            _dbContext.Remove(product);
+            _dbContext.SaveChanges();
+        }
+        public void DeleteOption(Guid id)
+        {
+            var option = _dbContext.ProductOptions.Find(id);
+            _dbContext.Attach(option);
+            _dbContext.Remove(option);
+            _dbContext.SaveChanges();
+        }
+
+
     }
 }

@@ -27,7 +27,7 @@ namespace RefactorThis.Core.Processor
                 throw new KeyNotFoundException("Product not found");
             }
 
-            _productRepository.Delete(id);
+            _productRepository.DeleteProduct(id);
         }
     }
 }
