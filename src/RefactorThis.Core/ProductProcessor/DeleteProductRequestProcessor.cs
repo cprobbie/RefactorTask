@@ -6,7 +6,11 @@ using RefactorThis.Core.Interfaces;
 
 namespace RefactorThis.Core.Processor
 {
-    public class DeleteProductRequestProcessor
+    public interface IDeleteProductRequestProcessor
+    {
+        void DeleteProduct(Guid id);
+    }
+    public class DeleteProductRequestProcessor : IDeleteProductRequestProcessor
     {
         private readonly IProductRepository _productRepository;
 

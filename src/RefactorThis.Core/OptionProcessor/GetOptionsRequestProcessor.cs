@@ -5,9 +5,14 @@ using RefactorThis.Core.Interfaces;
 
 namespace RefactorThis.Core.OptionProcessor
 {
-    public class GetOptionsRequestProcessor
+    public interface IGetOptionsRequestProcessor
     {
-        private IProductRepository _productRepository;
+        ProductOptions ListOptions(Guid productId);
+        ProductOption GetOptionById(Guid productId, Guid optionId);
+    }
+    public class GetOptionsRequestProcessor : IGetOptionsRequestProcessor
+    {
+        private readonly IProductRepository _productRepository;
 
         public GetOptionsRequestProcessor(IProductRepository productRepository)
         {

@@ -5,7 +5,12 @@ using RefactorThis.Core.Interfaces;
 
 namespace RefactorThis.Core.OptionProcessor
 {
-    public class UpdateOptionRequestProcessor
+    public interface IUpdateOptionRequestProcessor
+    {
+        void UpdateProductOption(Guid productId, Guid optionId, ProductOption option);
+    }
+
+    public class UpdateOptionRequestProcessor : IUpdateOptionRequestProcessor
     {
         private readonly IProductRepository _productRepository;
 

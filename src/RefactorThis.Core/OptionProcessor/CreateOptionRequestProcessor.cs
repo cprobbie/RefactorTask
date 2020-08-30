@@ -1,13 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
 using RefactorThis.Core.Domain;
 using RefactorThis.Core.Interfaces;
 
 namespace RefactorThis.Core.OptionProcessor
 {
-    public class CreateOptionRequestProcessor
+    public interface ICreateOptionRequestProcessor
+    {
+        void CreateProductOption(Guid productId, ProductOption option);
+    }
+
+    public class CreateOptionRequestProcessor : ICreateOptionRequestProcessor
     {
         private readonly IProductRepository _productRepository;
 

@@ -5,7 +5,11 @@ using RefactorThis.Core.Interfaces;
 
 namespace RefactorThis.Core.Processor
 {
-    public class CreateProductRequestProcessor
+    public interface ICreateProductRequestProcessor
+    {
+        void CreateProduct(Product product);
+    }
+    public class CreateProductRequestProcessor : ICreateProductRequestProcessor
     {
         private readonly IProductRepository _productRepository;
 

@@ -7,7 +7,12 @@ using RefactorThis.Core.Interfaces;
 
 namespace RefactorThis.Core.Processor
 {
-    public class UpdateProductRequestProcessor
+    public interface IUpdateProductRequestProcessor
+    {
+        void UpdateProduct(Guid id, Product product);
+    }
+
+    public class UpdateProductRequestProcessor : IUpdateProductRequestProcessor
     {
         private readonly IProductRepository _productRepository;
 
@@ -16,7 +21,7 @@ namespace RefactorThis.Core.Processor
             _productRepository = productRepository;
         }
 
-        public void UpdateProduct(Product product)
+        public void UpdateProduct(Guid id, Product product)
         {
             if (string.IsNullOrWhiteSpace(product.Name) || string.IsNullOrWhiteSpace(product.Description))
             {
@@ -28,7 +33,7 @@ namespace RefactorThis.Core.Processor
                 throw new ArgumentException("Invalid input amount");
             }
 
-            var existProduct = _productRepository.Get(product.Id);
+            var existProduct = _productRepository.Get(id);
             if (existProduct is null)
             {
                 throw new KeyNotFoundException("Product not found");
