@@ -5,15 +5,15 @@ VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RefactorThis.Api", "src\RefactorThis.Api\RefactorThis.Api.csproj", "{529176B5-F038-4745-A9B8-E87E9D226F6C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RefactorThis.Infrastructure", "src\RefactorThis.Infrastructure\RefactorThis.Infrastructure.csproj", "{0F30AB8A-FB98-4AED-A86F-9DAAD17938C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RefactorThis.Infrastructure", "src\RefactorThis.Infrastructure\RefactorThis.Infrastructure.csproj", "{0F30AB8A-FB98-4AED-A86F-9DAAD17938C9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B7B555EC-44EE-401D-8F86-B284662B4814}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{EF910187-EC91-4910-A437-BA872617162E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RefactorThis.Tests.Unit", "tests\RefactorThis.Tests.Unit\RefactorThis.Tests.Unit.csproj", "{F821868D-E95A-4A9E-AEBC-867CE2600A35}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RefactorThis.Tests.Unit", "tests\RefactorThis.Tests.Unit\RefactorThis.Tests.Unit.csproj", "{F821868D-E95A-4A9E-AEBC-867CE2600A35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RefactorThis.ApplicationCore", "src\RefactorThis.ApplicationCore\RefactorThis.ApplicationCore.csproj", "{22DCD3D6-E835-45FE-A263-1689D3044F6D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RefactorThis.Core", "src\RefactorThis.Core\RefactorThis.Core.csproj", "{22DCD3D6-E835-45FE-A263-1689D3044F6D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
