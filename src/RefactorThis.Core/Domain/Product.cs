@@ -15,6 +15,15 @@ namespace RefactorThis.Core.Domain
             DeliveryPrice = request.DeliveryPrice;
         }
 
+        public Product(Guid id, ProductRequest request)
+        {
+            Id = id;
+            Name = request.Name;
+            Description = request.Description;
+            Price = request.Price;
+            DeliveryPrice = request.DeliveryPrice;
+        }
+
         public Product(Guid id, string name, string description, decimal price, decimal deliveryPrice)
         {
             Id = id;

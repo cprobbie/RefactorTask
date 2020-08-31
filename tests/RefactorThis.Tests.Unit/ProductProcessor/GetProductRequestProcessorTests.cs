@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
-using AutoFixture;
-
 using FluentAssertions;
 
 using Moq;
@@ -55,10 +52,23 @@ namespace RefactorThis.Core.Unit.Processor
         }
 
         [Test]
-        public void GivenProductNameNonExists_ShouldReturnNull()
+        public void GivenProductListNull_ShouldReturnNull()
         {
             // Arrange
             _productRepo.Setup(x => x.List(It.IsAny<string>())).Returns((IList<Product>)null);
+            var SUT = new GetProductRequestProcessor(_productRepo.Object);
+
+            // Act
+            var result = SUT.ListProducts("iPad");
+            // Assert
+            result.Should().BeNull();
+        }
+
+        [Test]
+        public void GivenProductListEmpty_ShouldReturnNull()
+        {
+            // Arrange
+            _productRepo.Setup(x => x.List(It.IsAny<string>())).Returns(new List<Product>());
             var SUT = new GetProductRequestProcessor(_productRepo.Object);
 
             // Act

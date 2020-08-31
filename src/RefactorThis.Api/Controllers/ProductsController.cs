@@ -57,7 +57,7 @@ namespace RefactorThis.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(Guid id, [FromBody]Product product)
+        public IActionResult Update(Guid id, [FromBody]ProductRequest product)
         {
             _updateProductRequestProcessor.UpdateProduct(id, product);
             return Ok();

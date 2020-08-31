@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-
 using RefactorThis.Core.Domain;
+using RefactorThis.Core.Domain.Requests;
 using RefactorThis.Core.Interfaces;
 
 namespace RefactorThis.Core.Processor
 {
     public interface IUpdateProductRequestProcessor
     {
-        void UpdateProduct(Guid id, Product product);
+        void UpdateProduct(Guid id, ProductRequest product);
     }
 
     public class UpdateProductRequestProcessor : IUpdateProductRequestProcessor
@@ -21,14 +20,14 @@ namespace RefactorThis.Core.Processor
             _productRepository = productRepository;
         }
 
-        public void UpdateProduct(Guid id, Product product)
+        public void UpdateProduct(Guid id, ProductRequest productRequest)
         {
-            if (string.IsNullOrWhiteSpace(product.Name) || string.IsNullOrWhiteSpace(product.Description))
+            if (string.IsNullOrWhiteSpace(productRequest.Name) || string.IsNullOrWhiteSpace(productRequest.Description))
             {
                 throw new ArgumentException("Invalid input string");
             }
 
-            if (product.Price <= 0 || product.DeliveryPrice < 0)
+            if (productRequest.Price <= 0 || productRequest.DeliveryPrice < 0)
             {
                 throw new ArgumentException("Invalid input amount");
             }
@@ -39,6 +38,7 @@ namespace RefactorThis.Core.Processor
                 throw new KeyNotFoundException("Product not found");
             }
 
+            var product = new Product(id, productRequest);
             _productRepository.Update(product);
         }
     }
