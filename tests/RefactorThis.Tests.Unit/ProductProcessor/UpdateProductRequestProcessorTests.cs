@@ -34,12 +34,12 @@ namespace RefactorThis.Core.Unit.Processor
         public void GiveValidInputs_ShouldUpdateProduct()
         {
             // Arrange
-            var product = _fixture.Create<ProductRequest>();
+            var request = _fixture.Create<ProductRequest>();
             var queryResult = _fixture.Create<Product>();
             _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(queryResult);
 
             // Act
-            _SUT.UpdateProduct(It.IsAny<Guid>(), product);
+            _SUT.UpdateProduct(It.IsAny<Guid>(), request);
 
             // Assert
             _productRepositoryMock.Verify(x => x.Update(It.IsAny<Product>()), Times.Once);

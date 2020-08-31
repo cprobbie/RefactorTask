@@ -1,13 +1,14 @@
 ﻿using System;
 
 using RefactorThis.Core.Domain;
+using RefactorThis.Core.Domain.Requests;
 using RefactorThis.Core.Interfaces;
 
 namespace RefactorThis.Core.OptionProcessor
 {
     public interface IUpdateOptionRequestProcessor
     {
-        void UpdateProductOption(Guid productId, Guid optionId, ProductOption option);
+        void UpdateProductOption(Guid productId, Guid optionId, ProductOptionRequest option);
     }
 
     public class UpdateOptionRequestProcessor : IUpdateOptionRequestProcessor
@@ -19,9 +20,9 @@ namespace RefactorThis.Core.OptionProcessor
             _productRepository = productRepository;
         }
 
-        public void UpdateProductOption(Guid productId, Guid optionId, ProductOption option)
+        public void UpdateProductOption(Guid productId, Guid optionId, ProductOptionRequest optionRequest)
         {
-            if (string.IsNullOrWhiteSpace(option.Name) || string.IsNullOrWhiteSpace(option.Description))
+            if (string.IsNullOrWhiteSpace(optionRequest.Name) || string.IsNullOrWhiteSpace(optionRequest.Description))
             {
                 throw new ArgumentException("Invalid input string");
             }
@@ -30,7 +31,7 @@ namespace RefactorThis.Core.OptionProcessor
             {
                 throw new ArgumentException("Product Option not found");
             }
-
+            var option = new ProductOption(optionId, productId, optionRequest);
             _productRepository.Update(option);
         }
     }

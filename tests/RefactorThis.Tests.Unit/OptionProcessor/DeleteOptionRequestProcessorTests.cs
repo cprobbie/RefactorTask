@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 using FluentAssertions;
 using Moq;
@@ -32,10 +30,10 @@ namespace RefactorThis.Core.Unit.OptionProcessor
         public void GiveValidInputs_ShouldDeleteProductOption()
         {
             // Arrange
-            _productRepositoryMock.Setup(x => x.GetOption(It.IsAny<Guid>(), _option.Id)).Returns(_option);
+            _productRepositoryMock.Setup(x => x.GetOption(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(_option);
 
             // Act
-            _SUT.DeleteProductOption(It.IsAny<Guid>(), _option.Id);
+            _SUT.DeleteProductOption(It.IsAny<Guid>(), It.IsAny<Guid>());
 
             // Assert
             _productRepositoryMock.Verify(x => x.DeleteOption(It.IsAny<Guid>()), Times.Once);

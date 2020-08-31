@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using RefactorThis.Core.Domain;
 using RefactorThis.Core.Domain.DTOs;
+using RefactorThis.Core.Domain.Requests;
 using RefactorThis.Core.OptionProcessor;
 
 namespace RefactorThis.Api.Controllers
@@ -33,12 +34,11 @@ namespace RefactorThis.Api.Controllers
         public IActionResult GetOptions(Guid id)
         {
             var options = _getOptionsRequestProcessor.ListOptions(id);
-            if (options.Count == 0)
+            if (options is null)
             {
                 return NotFound($"No option was found for ProductId: {id}");
             }
-            var optionsDTO = new ProductOptionsDTO(options);
-            return Ok(optionsDTO);
+            return Ok(options);
         }
 
         [HttpGet("{optionId}")]
@@ -53,16 +53,16 @@ namespace RefactorThis.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateOption(Guid id, [FromBody]ProductOption option)
+        public IActionResult CreateOption(Guid id, [FromBody]ProductOptionRequest optionRequest)
         {
-            _createOptionRequestProcessor.CreateProductOption(id, option);
+            _createOptionRequestProcessor.CreateProductOption(id, optionRequest);
             return Ok();
         }
 
         [HttpPut("{optionId}")]
-        public IActionResult UpdateOption(Guid id, Guid optionId, [FromBody]ProductOption option)
+        public IActionResult UpdateOption(Guid id, Guid optionId, [FromBody] ProductOptionRequest optionRequest)
         {
-            _updateOptionRequestProcessor.UpdateProductOption(id, optionId, option);
+            _updateOptionRequestProcessor.UpdateProductOption(id, optionId, optionRequest);
             return Ok();
         }
 

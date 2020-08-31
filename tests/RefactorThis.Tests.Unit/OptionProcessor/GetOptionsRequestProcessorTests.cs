@@ -6,6 +6,7 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using RefactorThis.Core.Domain;
+using RefactorThis.Core.Domain.DTOs;
 using RefactorThis.Core.Interfaces;
 using RefactorThis.Core.OptionProcessor;
 
@@ -28,11 +29,13 @@ namespace RefactorThis.Core.Unit.Processor
             var id1 = Guid.NewGuid();
             var id2 = Guid.NewGuid();
 
-            var expectedOptions = new List<ProductOption>
+            var options = new List<ProductOption>
             {
                 new ProductOption(id1, "32G", "32G storage"),
                 new ProductOption(id2, "64G", "64G storage")
             };
+
+            var expectedDTO = new ProductOptionsDTO(options);
             
             var queryResult = new List<ProductOption>
             {
@@ -49,15 +52,27 @@ namespace RefactorThis.Core.Unit.Processor
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().BeEquivalentTo(expectedOptions);
+            result.Should().BeEquivalentTo(expectedDTO);
         }
 
         [Test]
-        public void GivenProductOptionsNonExist_ShouldReturnNull()
+        public void GivenProductOptionsListNull_ShouldReturnNull()
         {
             // Arrange
             var SUT = new GetOptionsRequestProcessor(_productRepositoryMock.Object);
             _productRepositoryMock.Setup(x => x.ListOptions(It.IsAny<Guid>())).Returns((IList<ProductOption>)null);
+            // Act
+            var result = SUT.ListOptions(It.IsAny<Guid>());
+
+            // Assert
+            result.Should().BeNull();
+        }
+        [Test]
+        public void GivenProductOptionsListEmpty_ShouldReturnNull()
+        {
+            // Arrange
+            var SUT = new GetOptionsRequestProcessor(_productRepositoryMock.Object);
+            _productRepositoryMock.Setup(x => x.ListOptions(It.IsAny<Guid>())).Returns(new List<ProductOption>());
             // Act
             var result = SUT.ListOptions(It.IsAny<Guid>());
 

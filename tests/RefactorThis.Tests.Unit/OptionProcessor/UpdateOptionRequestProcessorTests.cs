@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 
+using AutoFixture;
+
 using FluentAssertions;
 using Moq;
 
 using NUnit.Framework;
 
 using RefactorThis.Core.Domain;
+using RefactorThis.Core.Domain.Requests;
 using RefactorThis.Core.Interfaces;
 using RefactorThis.Core.OptionProcessor;
 
@@ -16,6 +19,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
     [TestFixture]
     public class UpdateOptionRequestProcessorTests
     {
+        private Fixture _fixture;
         private Mock<IProductRepository> _productRepositoryMock;
         private UpdateOptionRequestProcessor _SUT;
         private ProductOption _option;
@@ -23,22 +27,24 @@ namespace RefactorThis.Core.Unit.OptionProcessor
         [SetUp]
         public void Setup()
         {
+            _fixture = new Fixture();
             _productRepositoryMock = new Mock<IProductRepository>();
             _SUT = new UpdateOptionRequestProcessor(_productRepositoryMock.Object);
-            _option = new ProductOption(Guid.NewGuid(), "32G", "32G storage");
+            _option = _fixture.Create<ProductOption>();
         }
 
         [Test]
         public void GiveValidInputs_ShouldUpdateProductOption()
         {
             // Arrange
-            _productRepositoryMock.Setup(x => x.GetOption(It.IsAny<Guid>(), _option.Id)).Returns(_option);
+            var request = _fixture.Create<ProductOptionRequest>();
+            _productRepositoryMock.Setup(x => x.GetOption(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(_option);
 
             // Act
-            _SUT.UpdateProductOption(It.IsAny<Guid>(), _option.Id, _option);
+            _SUT.UpdateProductOption(It.IsAny<Guid>(), It.IsAny<Guid>(), request);
 
             // Assert
-            _productRepositoryMock.Verify(x => x.Update(_option), Times.Once);
+            _productRepositoryMock.Verify(x => x.Update(It.IsAny<ProductOption>()), Times.Once);
         }
 
         [TestCase("name", null)]
@@ -46,11 +52,15 @@ namespace RefactorThis.Core.Unit.OptionProcessor
         public void GivenInvalidString_ShouldThrowArgumentException(string name, string description)
         {
             // Arrange
-            _productRepositoryMock.Setup(x => x.GetOption(It.IsAny<Guid>(), _option.Id)).Returns(_option);
-            var option = new ProductOption(Guid.NewGuid(), name, description);
+            var request = _fixture.Build<ProductOptionRequest>()
+                .With(x => x.Name, name)
+                .With(x => x.Description, description)
+                .Create();
+
+            _productRepositoryMock.Setup(x => x.GetOption(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(_option);
 
             // Act and Assert
-            _SUT.Invoking(x => x.UpdateProductOption(It.IsAny<Guid>(), It.IsAny<Guid>(), option))
+            _SUT.Invoking(x => x.UpdateProductOption(It.IsAny<Guid>(), It.IsAny<Guid>(), request))
                 .Should().Throw<ArgumentException>().WithMessage("Invalid input string");
         }
 
@@ -58,10 +68,11 @@ namespace RefactorThis.Core.Unit.OptionProcessor
         public void GivenOptionIdNonExists_ShouldThrowArgumentException()
         {
             // Arrange
-            _productRepositoryMock.Setup(x => x.GetOption(It.IsAny<Guid>(), _option.Id)).Returns((ProductOption)null);
+            var request = _fixture.Create<ProductOptionRequest>();
+            _productRepositoryMock.Setup(x => x.GetOption(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns((ProductOption)null);
 
             // Act and Assert
-            _SUT.Invoking(x => x.UpdateProductOption(It.IsAny<Guid>(), It.IsAny<Guid>(), _option))
+            _SUT.Invoking(x => x.UpdateProductOption(It.IsAny<Guid>(), It.IsAny<Guid>(), request))
                 .Should().Throw<ArgumentException>().WithMessage("Product Option not found");
         }
     }

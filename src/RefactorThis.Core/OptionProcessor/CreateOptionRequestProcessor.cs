@@ -1,12 +1,13 @@
 ﻿using System;
 using RefactorThis.Core.Domain;
+using RefactorThis.Core.Domain.Requests;
 using RefactorThis.Core.Interfaces;
 
 namespace RefactorThis.Core.OptionProcessor
 {
     public interface ICreateOptionRequestProcessor
     {
-        void CreateProductOption(Guid productId, ProductOption option);
+        void CreateProductOption(Guid productId, ProductOptionRequest option);
     }
 
     public class CreateOptionRequestProcessor : ICreateOptionRequestProcessor
@@ -18,9 +19,9 @@ namespace RefactorThis.Core.OptionProcessor
             _productRepository = productRepository;
         }
 
-        public void CreateProductOption(Guid productId, ProductOption option)
+        public void CreateProductOption(Guid productId, ProductOptionRequest optionRequest)
         {
-            if (string.IsNullOrWhiteSpace(option.Name) || string.IsNullOrWhiteSpace(option.Description))
+            if (string.IsNullOrWhiteSpace(optionRequest.Name) || string.IsNullOrWhiteSpace(optionRequest.Description))
             {
                 throw new ArgumentException("Invalid input string");
             }
@@ -29,12 +30,8 @@ namespace RefactorThis.Core.OptionProcessor
             {
                 throw new ArgumentException("Product does not exist");
             }
-            var existingOption = _productRepository.GetOption(productId, option.Id);
-            if (existingOption != null)
-            {
-                throw new ArgumentException("Product Option Id already exists");
-            }
-            
+
+            var option = new ProductOption(productId, optionRequest);
             _productRepository.Save(option);
         }
     }
