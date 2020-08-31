@@ -41,6 +41,7 @@ namespace RefactorThis
                 options.Filters.Add(typeof(ExceptionFilter)); 
             });
             Core.Bootstrap.ConfigureServices(services);
+            services.AddSwaggerGen();
         }
 
         public void Configure(IApplicationBuilder app,  IWebHostEnvironment env)
@@ -53,6 +54,12 @@ namespace RefactorThis
             {
                 app.UseHsts();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "RefactorThis API v1");
+            });
 
             app.UseHttpsRedirection();
             app.UseRouting();
