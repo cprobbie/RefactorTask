@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
-using RefactorThis.Api.DTOs;
 using RefactorThis.Core.Domain;
+using RefactorThis.Core.Domain.Requests;
 using RefactorThis.Core.Processor;
 
 namespace RefactorThis.Controllers
@@ -31,12 +31,11 @@ namespace RefactorThis.Controllers
         public IActionResult Get([FromQuery]string name)
         {
             var products = _getProductRequestProcessor.ListProducts(name);
-            if (products.Count == 0)
+            if (products is null)
             {
                 return NotFound("No product was found");
             }
-            var productsDto = new ProductsDTO(products);
-            return Ok(productsDto);
+            return Ok(products);
         }
 
         [HttpGet("{id}")]

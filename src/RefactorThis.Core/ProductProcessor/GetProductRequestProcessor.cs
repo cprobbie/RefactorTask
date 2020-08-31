@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-
+using System.Linq;
 using RefactorThis.Core.Domain;
+using RefactorThis.Core.Domain.DTOs;
 using RefactorThis.Core.Interfaces;
 
 namespace RefactorThis.Core.Processor
 {
     public interface IGetProductRequestProcessor
     {
-        IList<Product> ListProducts(string name);
+        ProductsDTO ListProducts(string name);
         Product GetProductById(Guid id);
     }
     public class GetProductRequestProcessor : IGetProductRequestProcessor
@@ -21,13 +21,17 @@ namespace RefactorThis.Core.Processor
             _productRepository = productRepository;
         }
 
-        public IList<Product> ListProducts(string name)
+        public ProductsDTO ListProducts(string name)
         {
-            if (string.IsNullOrWhiteSpace(name))
+            IList<Product> products = string.IsNullOrWhiteSpace(name) ?
+                _productRepository.List() : 
+                _productRepository.List(name);
+
+            if (products is null || !products.Any())
             {
-                return _productRepository.List();
+                return null;
             }
-            return _productRepository.List(name);
+            return new ProductsDTO(products);
         }
 
         public Product GetProductById(Guid id)

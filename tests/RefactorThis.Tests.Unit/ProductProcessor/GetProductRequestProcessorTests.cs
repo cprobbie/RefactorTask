@@ -2,10 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using AutoFixture;
+
 using FluentAssertions;
+
 using Moq;
+
 using NUnit.Framework;
+
 using RefactorThis.Core.Domain;
+using RefactorThis.Core.Domain.DTOs;
 using RefactorThis.Core.Interfaces;
 using RefactorThis.Core.Processor;
 
@@ -26,10 +32,11 @@ namespace RefactorThis.Core.Unit.Processor
         {
             // Arrange
             var id = Guid.NewGuid();
-            var expectedProducts = new List<Product>
-            {
-                new Product(id, "iPad", "Apple tablet", 1500, 10)
+            var products = new List<Product> 
+            { 
+                new Product(id, "iPad", "Apple tablet", 1500, 10) 
             };
+            var expectedProducts = new ProductsDTO(products);
 
             var queryResult = new List<Product>
             {
@@ -40,11 +47,11 @@ namespace RefactorThis.Core.Unit.Processor
             var SUT = new GetProductRequestProcessor(_productRepo.Object);
 
             // Act
-            var result = SUT.ListProducts("iPad");
+            ProductsDTO result = SUT.ListProducts("iPad");
 
             // Assert
             result.Should().NotBeNull();
-            result.Single().Should().BeEquivalentTo(expectedProducts.Single());
+            result.Should().BeEquivalentTo(expectedProducts);
         }
 
         [Test]
@@ -66,11 +73,12 @@ namespace RefactorThis.Core.Unit.Processor
             // Arrange
             var id1 = Guid.NewGuid();
             var id2 = Guid.NewGuid();
-            var expectedProducts = new List<Product>
+            var products = new List<Product>
             {
                 new Product(id1, "iPad", "Apple tablet", 1500, 10),
                 new Product(id2, "MacBook", "Apple laptop", 2000, 15)
             };
+            var expectedProductsDTO = new ProductsDTO(products);
 
             var queryResult = new List<Product>
             {
@@ -87,8 +95,8 @@ namespace RefactorThis.Core.Unit.Processor
 
             // Assert
             result.Should().NotBeNull();
-            result.Single(x => x.Id == id1).Should().BeEquivalentTo(expectedProducts.Single(x => x.Id == id1));
-            result.Single(x => x.Id == id2).Should().BeEquivalentTo(expectedProducts.Single(x => x.Id == id2));
+            result.Items.Single(x => x.Id == id1).Should().BeEquivalentTo(expectedProductsDTO.Items.Single(x => x.Id == id1));
+            result.Items.Single(x => x.Id == id2).Should().BeEquivalentTo(expectedProductsDTO.Items.Single(x => x.Id == id2));
         }
     }
     [TestFixture]

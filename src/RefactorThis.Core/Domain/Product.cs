@@ -1,9 +1,20 @@
 ﻿using System;
 
+using RefactorThis.Core.Domain.Requests;
+
 namespace RefactorThis.Core.Domain
 {
     public class Product
     {
+        public Product(ProductRequest request)
+        {
+            Id = Guid.NewGuid();
+            Name = request.Name;
+            Description = request.Description;
+            Price = request.Price;
+            DeliveryPrice = request.DeliveryPrice;
+        }
+
         public Product(Guid id, string name, string description, decimal price, decimal deliveryPrice)
         {
             Id = id;

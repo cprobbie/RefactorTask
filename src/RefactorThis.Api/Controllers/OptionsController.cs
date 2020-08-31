@@ -1,7 +1,9 @@
 ﻿using System;
+
 using Microsoft.AspNetCore.Mvc;
-using RefactorThis.Api.DTOs;
+
 using RefactorThis.Core.Domain;
+using RefactorThis.Core.Domain.DTOs;
 using RefactorThis.Core.OptionProcessor;
 
 namespace RefactorThis.Api.Controllers

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using RefactorThis.Core.Domain;
 
-namespace RefactorThis.Api.DTOs
+namespace RefactorThis.Core.Domain.DTOs
 {
     public class ProductsDTO
     {

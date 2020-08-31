@@ -1,13 +1,14 @@
 ﻿using System;
 
 using RefactorThis.Core.Domain;
+using RefactorThis.Core.Domain.Requests;
 using RefactorThis.Core.Interfaces;
 
 namespace RefactorThis.Core.Processor
 {
     public interface ICreateProductRequestProcessor
     {
-        void CreateProduct(Product product);
+        void CreateProduct(ProductRequest product);
     }
     public class CreateProductRequestProcessor : ICreateProductRequestProcessor
     {
@@ -18,27 +19,19 @@ namespace RefactorThis.Core.Processor
             _productRepository = productRepository;
         }
 
-        public void CreateProduct(Product product)
+        public void CreateProduct(ProductRequest request)
         {
-            if (string.IsNullOrWhiteSpace(product.Name) || string.IsNullOrWhiteSpace(product.Description))
+            if (string.IsNullOrWhiteSpace(request.Name) || string.IsNullOrWhiteSpace(request.Description))
             {
                 throw new ArgumentException("Invalid input string");
             }
 
-            if (product.Price <= 0 || product.DeliveryPrice < 0)
+            if (request.Price <= 0 || request.DeliveryPrice < 0)
             {
                 throw new ArgumentException("Invalid input amount");
             }
-
-            var existingProduct = _productRepository.Get(product.Id);
-            if (existingProduct is null)
-            {
-                _productRepository.Save(product);
-            }
-            else
-            {
-                throw new ArgumentException("Product Id already exists");
-            }
+            var product = new Product(request);
+            _productRepository.Save(product);
         }
     }
 }
