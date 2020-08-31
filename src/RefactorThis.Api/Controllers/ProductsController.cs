@@ -1,7 +1,5 @@
 ﻿using System;
-
 using Microsoft.AspNetCore.Mvc;
-
 using RefactorThis.Api.DTOs;
 using RefactorThis.Core.Domain;
 using RefactorThis.Core.Processor;
@@ -33,6 +31,10 @@ namespace RefactorThis.Controllers
         public IActionResult Get([FromQuery]string name)
         {
             var products = _getProductRequestProcessor.ListProducts(name);
+            if (products.Count == 0)
+            {
+                return NotFound("No product was found");
+            }
             var productsDto = new ProductsDTO(products);
             return Ok(productsDto);
         }
@@ -41,13 +43,17 @@ namespace RefactorThis.Controllers
         public IActionResult Get(Guid id)
         {
             var product = _getProductRequestProcessor.GetProductById(id);
+            if (product is null)
+            {
+                return NotFound($"No product was found for id {id}");
+            }
             return Ok(product);
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody]Product product)
+        public IActionResult Post([FromBody]ProductRequest productRequest)
         {
-            _createProductRequestProcessor.CreateProduct(product);
+            _createProductRequestProcessor.CreateProduct(productRequest);
             return Ok();
         }
 

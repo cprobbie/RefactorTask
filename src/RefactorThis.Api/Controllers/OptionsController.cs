@@ -1,7 +1,5 @@
 ﻿using System;
-
 using Microsoft.AspNetCore.Mvc;
-
 using RefactorThis.Api.DTOs;
 using RefactorThis.Core.Domain;
 using RefactorThis.Core.OptionProcessor;
@@ -33,6 +31,10 @@ namespace RefactorThis.Api.Controllers
         public IActionResult GetOptions(Guid id)
         {
             var options = _getOptionsRequestProcessor.ListOptions(id);
+            if (options.Count == 0)
+            {
+                return NotFound($"No option was found for ProductId: {id}");
+            }
             var optionsDTO = new ProductOptionsDTO(options);
             return Ok(optionsDTO);
         }
@@ -41,6 +43,10 @@ namespace RefactorThis.Api.Controllers
         public IActionResult GetOption(Guid id, Guid optionId)
         {
             var option = _getOptionsRequestProcessor.GetOptionById(id, optionId);
+            if (option is null)
+            {
+                return NotFound($"No option was found for ProductId {id} and OptionId {optionId}");
+            }
             return Ok(option);
         }
 
