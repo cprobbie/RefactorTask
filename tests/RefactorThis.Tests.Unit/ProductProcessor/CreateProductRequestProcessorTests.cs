@@ -1,28 +1,28 @@
 ﻿using System;
+using AutoFixture;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using AutoFixture;
 using RefactorThis.Core.Domain;
-using RefactorThis.Core.Interfaces;
-using RefactorThis.Core.Processor;
 using RefactorThis.Core.Domain.Requests;
+using RefactorThis.Core.Interfaces;
+using RefactorThis.Core.ProductProcessor;
 
-namespace RefactorThis.Core.Unit.Processor
+namespace RefactorThis.Core.Unit.ProductProcessor
 {
     [TestFixture]
     public class CreateProductRequestProcessorTests
     {
         private Fixture _fixture;
         private Mock<IProductRepository> _productRepositoryMock;
-        private CreateProductRequestProcessor _SUT;
+        private CreateProductRequestProcessor _sut;
 
         [SetUp]
         public void Setup()
         {
             _fixture = new Fixture();
             _productRepositoryMock = new Mock<IProductRepository>();
-            _SUT = new CreateProductRequestProcessor(_productRepositoryMock.Object);
+            _sut = new CreateProductRequestProcessor(_productRepositoryMock.Object);
             _productRepositoryMock.Setup(x => x.Save(It.IsAny<Product>()));
         }
 
@@ -33,7 +33,7 @@ namespace RefactorThis.Core.Unit.Processor
             var request = _fixture.Create<ProductRequest>();
             
             // Act
-            _SUT.CreateProduct(request);
+            _sut.CreateProduct(request);
 
             // Assert
             _productRepositoryMock.Verify(x => x.Save(It.IsAny<Product>()), Times.Once);
@@ -51,7 +51,7 @@ namespace RefactorThis.Core.Unit.Processor
             
 
             // Act and Assert
-            _SUT.Invoking(x => x.CreateProduct(request)).Should().Throw<ArgumentException>().WithMessage("Invalid input string");
+            _sut.Invoking(x => x.CreateProduct(request)).Should().Throw<ArgumentException>().WithMessage("Invalid input string");
         }
 
         [TestCase(-1, 199)]
@@ -65,7 +65,7 @@ namespace RefactorThis.Core.Unit.Processor
                 .Create();
 
             // Act and Assert
-            _SUT.Invoking(x => x.CreateProduct(request)).Should().Throw<ArgumentException>().WithMessage("Invalid input amount");
+            _sut.Invoking(x => x.CreateProduct(request)).Should().Throw<ArgumentException>().WithMessage("Invalid input amount");
         }
     }
 }

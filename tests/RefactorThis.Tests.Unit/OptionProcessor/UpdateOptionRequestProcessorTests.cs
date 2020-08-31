@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
 using AutoFixture;
 
 using FluentAssertions;
@@ -21,7 +18,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
     {
         private Fixture _fixture;
         private Mock<IProductRepository> _productRepositoryMock;
-        private UpdateOptionRequestProcessor _SUT;
+        private UpdateOptionRequestProcessor _sut;
         private ProductOption _option;
 
         [SetUp]
@@ -29,7 +26,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
         {
             _fixture = new Fixture();
             _productRepositoryMock = new Mock<IProductRepository>();
-            _SUT = new UpdateOptionRequestProcessor(_productRepositoryMock.Object);
+            _sut = new UpdateOptionRequestProcessor(_productRepositoryMock.Object);
             _option = _fixture.Create<ProductOption>();
         }
 
@@ -41,7 +38,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
             _productRepositoryMock.Setup(x => x.GetOption(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(_option);
 
             // Act
-            _SUT.UpdateProductOption(It.IsAny<Guid>(), It.IsAny<Guid>(), request);
+            _sut.UpdateProductOption(It.IsAny<Guid>(), It.IsAny<Guid>(), request);
 
             // Assert
             _productRepositoryMock.Verify(x => x.Update(It.IsAny<ProductOption>()), Times.Once);
@@ -60,7 +57,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
             _productRepositoryMock.Setup(x => x.GetOption(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(_option);
 
             // Act and Assert
-            _SUT.Invoking(x => x.UpdateProductOption(It.IsAny<Guid>(), It.IsAny<Guid>(), request))
+            _sut.Invoking(x => x.UpdateProductOption(It.IsAny<Guid>(), It.IsAny<Guid>(), request))
                 .Should().Throw<ArgumentException>().WithMessage("Invalid input string");
         }
 
@@ -72,7 +69,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
             _productRepositoryMock.Setup(x => x.GetOption(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns((ProductOption)null);
 
             // Act and Assert
-            _SUT.Invoking(x => x.UpdateProductOption(It.IsAny<Guid>(), It.IsAny<Guid>(), request))
+            _sut.Invoking(x => x.UpdateProductOption(It.IsAny<Guid>(), It.IsAny<Guid>(), request))
                 .Should().Throw<ArgumentException>().WithMessage("Product Option not found");
         }
     }

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-
 using RefactorThis.Core.Interfaces;
 
-namespace RefactorThis.Core.Processor
+namespace RefactorThis.Core.ProductProcessor
 {
     public interface IDeleteProductRequestProcessor
     {

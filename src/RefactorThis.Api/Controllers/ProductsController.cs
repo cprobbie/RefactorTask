@@ -1,10 +1,9 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
-using RefactorThis.Core.Domain;
 using RefactorThis.Core.Domain.Requests;
-using RefactorThis.Core.Processor;
+using RefactorThis.Core.ProductProcessor;
 
-namespace RefactorThis.Controllers
+namespace RefactorThis.Api.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]

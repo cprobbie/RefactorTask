@@ -1,9 +1,6 @@
 ﻿using System;
 
 using Microsoft.AspNetCore.Mvc;
-
-using RefactorThis.Core.Domain;
-using RefactorThis.Core.Domain.DTOs;
 using RefactorThis.Core.Domain.Requests;
 using RefactorThis.Core.OptionProcessor;
 

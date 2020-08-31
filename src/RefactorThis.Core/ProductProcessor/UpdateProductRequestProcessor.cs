@@ -4,7 +4,7 @@ using RefactorThis.Core.Domain;
 using RefactorThis.Core.Domain.Requests;
 using RefactorThis.Core.Interfaces;
 
-namespace RefactorThis.Core.Processor
+namespace RefactorThis.Core.ProductProcessor
 {
     public interface IUpdateProductRequestProcessor
     {

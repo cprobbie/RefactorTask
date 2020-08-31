@@ -2,10 +2,10 @@
 
 namespace RefactorThis.Core.Domain.DTOs
 {
-    public class ProductsDTO
+    public class ProductsDto
     {
         public IList<Product> Items { get; set; }
-        public ProductsDTO(IList<Product> products)
+        public ProductsDto(IList<Product> products)
         {
             Items = products;
         }

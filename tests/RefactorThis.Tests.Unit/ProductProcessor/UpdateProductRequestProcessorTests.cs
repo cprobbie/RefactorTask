@@ -1,32 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-
 using AutoFixture;
-
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using RefactorThis.Core.Domain;
 using RefactorThis.Core.Domain.Requests;
 using RefactorThis.Core.Interfaces;
-using RefactorThis.Core.Processor;
+using RefactorThis.Core.ProductProcessor;
 
-namespace RefactorThis.Core.Unit.Processor
+namespace RefactorThis.Core.Unit.ProductProcessor
 {
     [TestFixture]
     public class UpdateProductRequestProcessorTests
     {
         private Fixture _fixture;
         private Mock<IProductRepository> _productRepositoryMock;
-        private UpdateProductRequestProcessor _SUT;
+        private UpdateProductRequestProcessor _sut;
 
         [SetUp]
         public void Setup()
         {
             _fixture = new Fixture();
             _productRepositoryMock = new Mock<IProductRepository>();
-            _SUT = new UpdateProductRequestProcessor(_productRepositoryMock.Object);
+            _sut = new UpdateProductRequestProcessor(_productRepositoryMock.Object);
             _productRepositoryMock.Setup(x => x.Update(It.IsAny<Product>()));
         }
 
@@ -39,7 +36,7 @@ namespace RefactorThis.Core.Unit.Processor
             _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(queryResult);
 
             // Act
-            _SUT.UpdateProduct(It.IsAny<Guid>(), request);
+            _sut.UpdateProduct(It.IsAny<Guid>(), request);
 
             // Assert
             _productRepositoryMock.Verify(x => x.Update(It.IsAny<Product>()), Times.Once);
@@ -58,7 +55,7 @@ namespace RefactorThis.Core.Unit.Processor
             _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(It.IsAny<Product>);
 
             // Act and Assert
-            _SUT.Invoking(x => x.UpdateProduct(It.IsAny<Guid>(), product)).Should().Throw<ArgumentException>().WithMessage("Invalid input string");
+            _sut.Invoking(x => x.UpdateProduct(It.IsAny<Guid>(), product)).Should().Throw<ArgumentException>().WithMessage("Invalid input string");
         }
 
         [TestCase(-1, 199)]
@@ -74,7 +71,7 @@ namespace RefactorThis.Core.Unit.Processor
             _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(It.IsAny<Product>);
 
             // Act and Assert
-            _SUT.Invoking(x => x.UpdateProduct(It.IsAny<Guid>(), request)).Should().Throw<ArgumentException>().WithMessage("Invalid input amount");
+            _sut.Invoking(x => x.UpdateProduct(It.IsAny<Guid>(), request)).Should().Throw<ArgumentException>().WithMessage("Invalid input amount");
         }
 
         [Test]
@@ -85,7 +82,7 @@ namespace RefactorThis.Core.Unit.Processor
             _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns((Product)null);
 
             // Act and Assert
-            _SUT.Invoking(x => x.UpdateProduct(It.IsAny<Guid>(), request)).Should().Throw<KeyNotFoundException>().WithMessage("Product not found");
+            _sut.Invoking(x => x.UpdateProduct(It.IsAny<Guid>(), request)).Should().Throw<KeyNotFoundException>().WithMessage("Product not found");
         }
     }
 }

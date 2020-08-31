@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
 using RefactorThis.Core.OptionProcessor;
-using RefactorThis.Core.Processor;
+using RefactorThis.Core.ProductProcessor;
 
 namespace RefactorThis.Core
 {

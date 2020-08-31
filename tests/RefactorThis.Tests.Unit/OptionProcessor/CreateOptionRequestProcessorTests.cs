@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
 using AutoFixture;
 
 using FluentAssertions;
@@ -21,7 +18,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
     {
         private Fixture _fixture;
         private Mock<IProductRepository> _productRepositoryMock;
-        private CreateOptionRequestProcessor _SUT;
+        private CreateOptionRequestProcessor _sut;
         private Product _product;
 
         [SetUp]
@@ -29,9 +26,9 @@ namespace RefactorThis.Core.Unit.OptionProcessor
         {
             _fixture = new Fixture();
             _productRepositoryMock = new Mock<IProductRepository>();
-            _SUT = new CreateOptionRequestProcessor(_productRepositoryMock.Object);
+            _sut = new CreateOptionRequestProcessor(_productRepositoryMock.Object);
             _productRepositoryMock.Setup(x => x.Save(It.IsAny<ProductOption>()));
-            _product = _fixture.Create<Product>(); ;
+            _product = _fixture.Create<Product>();
         }
 
         [Test]
@@ -42,7 +39,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
             _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(_product);
 
             // Act
-            _SUT.CreateProductOption(It.IsAny<Guid>(), optionRequest);
+            _sut.CreateProductOption(It.IsAny<Guid>(), optionRequest);
             // Assert
             _productRepositoryMock.Verify(x => x.Save(It.IsAny<ProductOption>()), Times.Once);
         }
@@ -58,10 +55,9 @@ namespace RefactorThis.Core.Unit.OptionProcessor
                 .Create();
 
             _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(_product);
-            var option = new ProductOption(Guid.NewGuid(), name, description);
 
             // Act and Assert
-            _SUT.Invoking(x => x.CreateProductOption(It.IsAny<Guid>(), optionRequest))
+            _sut.Invoking(x => x.CreateProductOption(It.IsAny<Guid>(), optionRequest))
                 .Should().Throw<ArgumentException>().WithMessage("Invalid input string");
         }
 
@@ -73,7 +69,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
             _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns((Product)null);
 
             // Act and Assert
-            _SUT.Invoking(x => x.CreateProductOption(It.IsAny<Guid>(), optionRequest))
+            _sut.Invoking(x => x.CreateProductOption(It.IsAny<Guid>(), optionRequest))
                 .Should().Throw<ArgumentException>().WithMessage("Product does not exist");
         }
     }

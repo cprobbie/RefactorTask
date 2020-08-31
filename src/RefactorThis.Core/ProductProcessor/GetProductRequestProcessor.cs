@@ -5,11 +5,11 @@ using RefactorThis.Core.Domain;
 using RefactorThis.Core.Domain.DTOs;
 using RefactorThis.Core.Interfaces;
 
-namespace RefactorThis.Core.Processor
+namespace RefactorThis.Core.ProductProcessor
 {
     public interface IGetProductRequestProcessor
     {
-        ProductsDTO ListProducts(string name);
+        ProductsDto ListProducts(string name);
         Product GetProductById(Guid id);
     }
     public class GetProductRequestProcessor : IGetProductRequestProcessor
@@ -21,7 +21,7 @@ namespace RefactorThis.Core.Processor
             _productRepository = productRepository;
         }
 
-        public ProductsDTO ListProducts(string name)
+        public ProductsDto ListProducts(string name)
         {
             IList<Product> products = string.IsNullOrWhiteSpace(name) ?
                 _productRepository.List() : 
@@ -31,7 +31,7 @@ namespace RefactorThis.Core.Processor
             {
                 return null;
             }
-            return new ProductsDTO(products);
+            return new ProductsDto(products);
         }
 
         public Product GetProductById(Guid id)

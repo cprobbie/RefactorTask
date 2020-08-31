@@ -5,21 +5,21 @@ using Moq;
 using NUnit.Framework;
 using RefactorThis.Core.Domain;
 using RefactorThis.Core.Interfaces;
-using RefactorThis.Core.Processor;
+using RefactorThis.Core.ProductProcessor;
 
-namespace RefactorThis.Core.Unit.Processor
+namespace RefactorThis.Core.Unit.ProductProcessor
 {
     [TestFixture]
     public class DeleteProductRequestProcessorTests
     {
         private Mock<IProductRepository> _productRepositoryMock;
-        private DeleteProductRequestProcessor _SUT;
+        private DeleteProductRequestProcessor _sut;
 
         [SetUp]
         public void Setup()
         {
             _productRepositoryMock = new Mock<IProductRepository>();
-            _SUT = new DeleteProductRequestProcessor(_productRepositoryMock.Object);
+            _sut = new DeleteProductRequestProcessor(_productRepositoryMock.Object);
             _productRepositoryMock.Setup(x => x.DeleteProduct(It.IsAny<Guid>()));
         }
 
@@ -31,7 +31,7 @@ namespace RefactorThis.Core.Unit.Processor
             _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(queryResult);
 
             // Act
-            _SUT.DeleteProduct(It.IsAny<Guid>());
+            _sut.DeleteProduct(It.IsAny<Guid>());
 
             // Assert
             _productRepositoryMock.Verify(x => x.DeleteProduct(It.IsAny<Guid>()), Times.Once);
@@ -44,7 +44,7 @@ namespace RefactorThis.Core.Unit.Processor
             _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns((Product)null);
 
             // Act and Assert
-            _SUT.Invoking(x => x.DeleteProduct(It.IsAny<Guid>())).Should().Throw<KeyNotFoundException>().WithMessage("Product not found");
+            _sut.Invoking(x => x.DeleteProduct(It.IsAny<Guid>())).Should().Throw<KeyNotFoundException>().WithMessage("Product not found");
         }
     }
 }

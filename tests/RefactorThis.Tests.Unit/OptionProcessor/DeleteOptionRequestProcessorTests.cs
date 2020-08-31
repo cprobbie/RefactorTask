@@ -15,14 +15,14 @@ namespace RefactorThis.Core.Unit.OptionProcessor
     public class DeleteOptionRequestProcessorTests
     {
         private Mock<IProductRepository> _productRepositoryMock;
-        private DeleteOptionRequestProcessor _SUT;
+        private DeleteOptionRequestProcessor _sut;
         private ProductOption _option;
 
         [SetUp]
         public void Setup()
         {
             _productRepositoryMock = new Mock<IProductRepository>();
-            _SUT = new DeleteOptionRequestProcessor(_productRepositoryMock.Object);
+            _sut = new DeleteOptionRequestProcessor(_productRepositoryMock.Object);
             _option = new ProductOption(Guid.NewGuid(), "32G", "32G storage");
         }
 
@@ -33,7 +33,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
             _productRepositoryMock.Setup(x => x.GetOption(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(_option);
 
             // Act
-            _SUT.DeleteProductOption(It.IsAny<Guid>(), It.IsAny<Guid>());
+            _sut.DeleteProductOption(It.IsAny<Guid>(), It.IsAny<Guid>());
 
             // Assert
             _productRepositoryMock.Verify(x => x.DeleteOption(It.IsAny<Guid>()), Times.Once);
@@ -46,7 +46,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
             _productRepositoryMock.Setup(x => x.GetOption(It.IsAny<Guid>(), _option.Id)).Returns((ProductOption)null);
 
             // Act and Assert
-            _SUT.Invoking(x => x.DeleteProductOption(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            _sut.Invoking(x => x.DeleteProductOption(It.IsAny<Guid>(), It.IsAny<Guid>()))
                 .Should().Throw<ArgumentException>().WithMessage("Product Option not found");
         }
     }

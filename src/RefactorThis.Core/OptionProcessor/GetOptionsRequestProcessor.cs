@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 using RefactorThis.Core.Domain;
@@ -10,7 +9,7 @@ namespace RefactorThis.Core.OptionProcessor
 {
     public interface IGetOptionsRequestProcessor
     {
-        ProductOptionsDTO ListOptions(Guid productId);
+        ProductOptionsDto ListOptions(Guid productId);
         ProductOption GetOptionById(Guid productId, Guid optionId);
     }
     public class GetOptionsRequestProcessor : IGetOptionsRequestProcessor
@@ -22,14 +21,14 @@ namespace RefactorThis.Core.OptionProcessor
             _productRepository = productRepository;
         }
 
-        public ProductOptionsDTO ListOptions(Guid productId)
+        public ProductOptionsDto ListOptions(Guid productId)
         {
             var options = _productRepository.ListOptions(productId);
             if (options is null || !options.Any())
             {
                 return null;
             }
-            return new ProductOptionsDTO(options);
+            return new ProductOptionsDto(options);
         }
 
         public ProductOption GetOptionById(Guid productId, Guid optionId)
