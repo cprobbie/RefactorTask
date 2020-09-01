@@ -31,10 +31,6 @@ namespace RefactorThis.Api.Controllers
         public IActionResult GetOptions(Guid id)
         {
             var options = _getOptionsRequestProcessor.ListOptions(id);
-            if (options is null)
-            {
-                return NotFound($"No option was found for ProductId: {id}");
-            }
             return Ok(options);
         }
 
@@ -42,10 +38,6 @@ namespace RefactorThis.Api.Controllers
         public IActionResult GetOption(Guid id, Guid optionId)
         {
             var option = _getOptionsRequestProcessor.GetOptionById(id, optionId);
-            if (option is null)
-            {
-                return NotFound($"No option was found for ProductId {id} and OptionId {optionId}");
-            }
             return Ok(option);
         }
 

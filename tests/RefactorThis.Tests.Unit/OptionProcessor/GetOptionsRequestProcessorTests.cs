@@ -59,11 +59,9 @@ namespace RefactorThis.Core.Unit.OptionProcessor
             // Arrange
             var sut = new GetOptionsRequestProcessor(_productRepositoryMock.Object);
             _productRepositoryMock.Setup(x => x.ListOptions(It.IsAny<Guid>())).Returns((IList<ProductOption>)null);
-            // Act
-            var result = sut.ListOptions(It.IsAny<Guid>());
 
-            // Assert
-            result.Should().BeNull();
+            // Act and Assert
+            sut.Invoking(x => x.ListOptions(It.IsAny<Guid>())).Should().Throw<KeyNotFoundException>().WithMessage("There is no option available");
         }
         [Test]
         public void GivenProductOptionsListEmpty_ShouldReturnNull()
@@ -71,11 +69,9 @@ namespace RefactorThis.Core.Unit.OptionProcessor
             // Arrange
             var sut = new GetOptionsRequestProcessor(_productRepositoryMock.Object);
             _productRepositoryMock.Setup(x => x.ListOptions(It.IsAny<Guid>())).Returns(new List<ProductOption>());
-            // Act
-            var result = sut.ListOptions(It.IsAny<Guid>());
 
-            // Assert
-            result.Should().BeNull();
+            // Act and Assert
+            sut.Invoking(x=> x.ListOptions(It.IsAny<Guid>())).Should().Throw<KeyNotFoundException>().WithMessage("There is no option available");
         }
     }
 
@@ -111,17 +107,14 @@ namespace RefactorThis.Core.Unit.OptionProcessor
         }
 
         [Test]
-        public void GivenProductOptionsNonExist_ShouldReturnNull()
+        public void GivenProductOptionNonExist_ShouldThrowNotFoundException()
         {
             // Arrange
             var sut = new GetOptionsRequestProcessor(_productRepositoryMock.Object);
             _productRepositoryMock.Setup(x => x.GetOption(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns((ProductOption)null);
 
-            // Act
-            var result = sut.GetOptionById(It.IsAny<Guid>(), It.IsAny<Guid>());
-
-            // Assert
-            result.Should().BeNull();
+            // Act and Assert
+            sut.Invoking(x => x.GetOptionById(It.IsAny<Guid>(), It.IsAny<Guid>())).Should().Throw<KeyNotFoundException>().WithMessage("Option not found");
         }
     }
 }

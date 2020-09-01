@@ -49,29 +49,25 @@ namespace RefactorThis.Core.Unit.ProductProcessor
         }
 
         [Test]
-        public void GivenProductListNull_ShouldReturnNull()
+        public void GivenProductListNull_ShouldThrowKeyNotFoundException()
         {
             // Arrange
             _productRepo.Setup(x => x.List(It.IsAny<string>())).Returns((IList<Product>)null);
             var sut = new GetProductRequestProcessor(_productRepo.Object);
 
-            // Act
-            var result = sut.ListProducts("iPad");
-            // Assert
-            result.Should().BeNull();
+            // Act and Assert
+            sut.Invoking(x => x.ListProducts("iPad")).Should().Throw<KeyNotFoundException>().WithMessage("There is no product");
         }
 
         [Test]
-        public void GivenProductListEmpty_ShouldReturnNull()
+        public void GivenProductListEmpty_ShouldThrowKeyNotFoundException()
         {
             // Arrange
             _productRepo.Setup(x => x.List(It.IsAny<string>())).Returns(new List<Product>());
             var sut = new GetProductRequestProcessor(_productRepo.Object);
 
-            // Act
-            var result = sut.ListProducts("iPad");
-            // Assert
-            result.Should().BeNull();
+            // Act and Assert
+            sut.Invoking(x => x.ListProducts("iPad")).Should().Throw<KeyNotFoundException>().WithMessage("There is no product");
         }
 
         [Test]
@@ -136,17 +132,14 @@ namespace RefactorThis.Core.Unit.ProductProcessor
         }
 
         [Test]
-        public void GivenIdNonExists_ShouldReturnNull()
+        public void GivenIdNonExists_ShouldThrowKeyNotFoundException()
         {
             // Arrange
             _productRepo.Setup(x => x.Get(It.IsAny<Guid>())).Returns((Product)null);
             var sut = new GetProductRequestProcessor(_productRepo.Object);
 
-            // Act
-            var result = sut.GetProductById(It.IsAny<Guid>());
-
-            // Assert
-            result.Should().BeNull();
+            // Act and Assert
+            sut.Invoking(x => x.GetProductById(It.IsAny<Guid>())).Should().Throw<KeyNotFoundException>().WithMessage("Product not found");
         }
     }
 }

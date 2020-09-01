@@ -29,14 +29,19 @@ namespace RefactorThis.Core.ProductProcessor
 
             if (products is null || !products.Any())
             {
-                return null;
+                throw new KeyNotFoundException("There is no product");
             }
             return new ProductsDto(products);
         }
 
         public Product GetProductById(Guid id)
         {
-            return _productRepository.Get(id);
+            var product = _productRepository.Get(id);
+            if (product is null)
+            {
+                throw new KeyNotFoundException("Product not found");
+            }
+            return product;
         }
     }
 }

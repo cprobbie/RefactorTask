@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using RefactorThis.Core.Domain;
@@ -26,14 +27,19 @@ namespace RefactorThis.Core.OptionProcessor
             var options = _productRepository.ListOptions(productId);
             if (options is null || !options.Any())
             {
-                return null;
+                throw new KeyNotFoundException("There is no option available");
             }
             return new ProductOptionsDto(options);
         }
 
         public ProductOption GetOptionById(Guid productId, Guid optionId)
         {
-            return _productRepository.GetOption(productId, optionId);
+            var option = _productRepository.GetOption(productId, optionId);
+            if (option is null)
+            {
+                throw new KeyNotFoundException("Option not found");
+            }
+            return option;
         }
     }
 }

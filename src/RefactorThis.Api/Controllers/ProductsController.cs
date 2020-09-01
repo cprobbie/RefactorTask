@@ -30,10 +30,6 @@ namespace RefactorThis.Api.Controllers
         public IActionResult Get([FromQuery]string name)
         {
             var products = _getProductRequestProcessor.ListProducts(name);
-            if (products is null)
-            {
-                return NotFound("No product was found");
-            }
             return Ok(products);
         }
 
@@ -41,10 +37,6 @@ namespace RefactorThis.Api.Controllers
         public IActionResult Get(Guid id)
         {
             var product = _getProductRequestProcessor.GetProductById(id);
-            if (product is null)
-            {
-                return NotFound($"No product was found for id {id}");
-            }
             return Ok(product);
         }
 
