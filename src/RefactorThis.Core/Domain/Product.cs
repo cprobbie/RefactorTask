@@ -6,7 +6,7 @@ namespace RefactorThis.Core.Domain
 {
     public class Product
     {
-        public Product(ProductRequest request)
+        public Product(CreateProductRequest request)
         {
             Id = Guid.NewGuid();
             Name = request.Name;
@@ -15,7 +15,7 @@ namespace RefactorThis.Core.Domain
             DeliveryPrice = request.DeliveryPrice;
         }
 
-        public Product(Guid id, ProductRequest request)
+        public Product(Guid id, UpdateProductRequest request)
         {
             Id = id;
             Name = request.Name;

@@ -35,7 +35,7 @@ namespace RefactorThis.Core.Unit.ProductProcessor
         public async Task GiveValidInputs_ShouldUpdateProduct()
         {
             // Arrange
-            var request = _fixture.Create<ProductRequest>();
+            var request = _fixture.Create<UpdateProductRequest>();
             _productRepositoryMock.Setup(x => x.GetAsync(It.IsAny<Guid>())).Returns(Task.FromResult(_queryResult));
 
             // Act
@@ -50,7 +50,7 @@ namespace RefactorThis.Core.Unit.ProductProcessor
         public async Task GivenInvalidString_ShouldThrowArgumentException(string name, string description)
         {
             // Arrange
-            var request = _fixture.Build<ProductRequest>()
+            var request = _fixture.Build<UpdateProductRequest>()
                 .With(x => x.Name, name)
                 .With(x => x.Description, description)
                 .Create();
@@ -69,7 +69,7 @@ namespace RefactorThis.Core.Unit.ProductProcessor
         public async Task GivenInvalidAmount_ShouldThrowArgumentException(decimal price, decimal deliveryPrice)
         {
             // Arrange
-            var request = _fixture.Build<ProductRequest>()
+            var request = _fixture.Build<UpdateProductRequest>()
                 .With(x => x.Price, price)
                 .With(x => x.DeliveryPrice, deliveryPrice)
                 .Create();
@@ -87,7 +87,7 @@ namespace RefactorThis.Core.Unit.ProductProcessor
         public async Task GivenProductNotExist_ShouldThrowKeyNotFoundException()
         {
             // Arrange
-            var request = _fixture.Create<ProductRequest>();
+            var request = _fixture.Create<UpdateProductRequest>();
             _productRepositoryMock.Setup(x => x.GetAsync(It.IsAny<Guid>())).Returns(Task.FromResult((Product)null));
 
             // Act 

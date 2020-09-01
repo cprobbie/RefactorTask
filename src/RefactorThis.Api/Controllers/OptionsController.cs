@@ -43,14 +43,14 @@ namespace RefactorThis.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateOption(Guid id, [FromBody]ProductOptionRequest optionRequest)
+        public async Task<IActionResult> CreateOption(Guid id, [FromBody]CreateProductOptionRequest optionRequest)
         {
             await _createOptionRequestProcessor.CreateProductOptionAsync(id, optionRequest);
             return Ok();
         }
 
         [HttpPut("{optionId}")]
-        public async Task<IActionResult> UpdateOption(Guid id, Guid optionId, [FromBody] ProductOptionRequest optionRequest)
+        public async Task<IActionResult> UpdateOption(Guid id, Guid optionId, [FromBody] UpdateProductOptionRequest optionRequest)
         {
             await _updateOptionRequestProcessor.UpdateProductOptionAsync(id, optionId, optionRequest);
             return Ok();

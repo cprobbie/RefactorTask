@@ -32,7 +32,7 @@ namespace RefactorThis.Core.Unit.ProductProcessor
         public async Task GiveValidInputs_ShouldSaveProduct()
         {
             // Arrange
-            var request = _fixture.Create<ProductRequest>();
+            var request = _fixture.Create<CreateProductRequest>();
             
             // Act
             await _sut.CreateProductAsync(request);
@@ -46,7 +46,7 @@ namespace RefactorThis.Core.Unit.ProductProcessor
         public async Task GivenInvalidString_ShouldThrowArgumentException(string name, string description)
         {
             // Arrange
-            var request = _fixture.Build<ProductRequest>()
+            var request = _fixture.Build<CreateProductRequest>()
                 .With(x => x.Name, name)
                 .With(x => x.Description, description)
                 .Create();
@@ -63,7 +63,7 @@ namespace RefactorThis.Core.Unit.ProductProcessor
         public async Task GivenInvalidAmount_ShouldThrowArgumentException(decimal price, decimal deliveryPrice)
         {
             // Arrange
-            var request = _fixture.Build<ProductRequest>()
+            var request = _fixture.Build<CreateProductRequest>()
                 .With(x => x.Price, price)
                 .With(x => x.DeliveryPrice, deliveryPrice)
                 .Create();

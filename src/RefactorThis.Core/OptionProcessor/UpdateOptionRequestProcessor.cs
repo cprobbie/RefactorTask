@@ -9,7 +9,7 @@ namespace RefactorThis.Core.OptionProcessor
 {
     public interface IUpdateOptionRequestProcessor
     {
-        Task UpdateProductOptionAsync(Guid productId, Guid optionId, ProductOptionRequest option);
+        Task UpdateProductOptionAsync(Guid productId, Guid optionId, UpdateProductOptionRequest option);
     }
 
     public class UpdateOptionRequestProcessor : IUpdateOptionRequestProcessor
@@ -21,7 +21,7 @@ namespace RefactorThis.Core.OptionProcessor
             _productRepository = productRepository;
         }
 
-        public async Task UpdateProductOptionAsync(Guid productId, Guid optionId, ProductOptionRequest optionRequest)
+        public async Task UpdateProductOptionAsync(Guid productId, Guid optionId, UpdateProductOptionRequest optionRequest)
         {
             if (string.IsNullOrWhiteSpace(optionRequest.Name) || string.IsNullOrWhiteSpace(optionRequest.Description))
             {

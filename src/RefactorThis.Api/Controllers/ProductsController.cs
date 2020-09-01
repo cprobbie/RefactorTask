@@ -43,14 +43,14 @@ namespace RefactorThis.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]ProductRequest productRequest)
+        public async Task<IActionResult> Post([FromBody]CreateProductRequest productRequest)
         {
             await _createProductRequestProcessor.CreateProductAsync(productRequest);
             return Ok();
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody]ProductRequest product)
+        public async Task<IActionResult> Update(Guid id, [FromBody]UpdateProductRequest product)
         {
             await _updateProductRequestProcessor.UpdateProductAsync(id, product);
             return Ok();

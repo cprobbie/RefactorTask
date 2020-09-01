@@ -10,7 +10,7 @@ namespace RefactorThis.Core.ProductProcessor
 {
     public interface IUpdateProductRequestProcessor
     {
-        Task UpdateProductAsync(Guid id, ProductRequest product);
+        Task UpdateProductAsync(Guid id, UpdateProductRequest product);
     }
 
     public class UpdateProductRequestProcessor : IUpdateProductRequestProcessor
@@ -22,7 +22,7 @@ namespace RefactorThis.Core.ProductProcessor
             _productRepository = productRepository;
         }
 
-        public async Task UpdateProductAsync(Guid id, ProductRequest productRequest)
+        public async Task UpdateProductAsync(Guid id, UpdateProductRequest productRequest)
         {
             if (string.IsNullOrWhiteSpace(productRequest.Name) || string.IsNullOrWhiteSpace(productRequest.Description))
             {

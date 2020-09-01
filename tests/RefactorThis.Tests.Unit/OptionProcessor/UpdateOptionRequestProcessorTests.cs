@@ -36,7 +36,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
         public async Task GivenValidInputs_ShouldUpdateProductOption()
         {
             // Arrange
-            var request = _fixture.Create<ProductOptionRequest>();
+            var request = _fixture.Create<UpdateProductOptionRequest>();
             _productRepositoryMock.Setup(x => x.GetOptionAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(Task.FromResult(_option));
 
             // Act
@@ -51,7 +51,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
         public async Task GivenInvalidString_ShouldThrowArgumentException(string name, string description)
         {
             // Arrange
-            var request = _fixture.Build<ProductOptionRequest>()
+            var request = _fixture.Build<UpdateProductOptionRequest>()
                 .With(x => x.Name, name)
                 .With(x => x.Description, description)
                 .Create();
@@ -69,7 +69,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
         public async Task GivenOptionIdNonExists_ShouldThrowArgumentException()
         {
             // Arrange
-            var request = _fixture.Create<ProductOptionRequest>();
+            var request = _fixture.Create<UpdateProductOptionRequest>();
             _productRepositoryMock.Setup(x => x.GetOptionAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(Task.FromResult((ProductOption)null));
 
             // Act 

@@ -9,7 +9,7 @@ namespace RefactorThis.Core.OptionProcessor
 {
     public interface ICreateOptionRequestProcessor
     {
-        Task CreateProductOptionAsync(Guid productId, ProductOptionRequest option);
+        Task CreateProductOptionAsync(Guid productId, CreateProductOptionRequest option);
     }
 
     public class CreateOptionRequestProcessor : ICreateOptionRequestProcessor
@@ -21,7 +21,7 @@ namespace RefactorThis.Core.OptionProcessor
             _productRepository = productRepository;
         }
 
-        public async Task CreateProductOptionAsync(Guid productId, ProductOptionRequest optionRequest)
+        public async Task CreateProductOptionAsync(Guid productId, CreateProductOptionRequest optionRequest)
         {
             if (string.IsNullOrWhiteSpace(optionRequest.Name) || string.IsNullOrWhiteSpace(optionRequest.Description))
             {

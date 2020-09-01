@@ -9,7 +9,7 @@ namespace RefactorThis.Core.ProductProcessor
 {
     public interface ICreateProductRequestProcessor
     {
-        Task CreateProductAsync(ProductRequest product);
+        Task CreateProductAsync(CreateProductRequest product);
     }
     public class CreateProductRequestProcessor : ICreateProductRequestProcessor
     {
@@ -20,7 +20,7 @@ namespace RefactorThis.Core.ProductProcessor
             _productRepository = productRepository;
         }
 
-        public async Task CreateProductAsync(ProductRequest request)
+        public async Task CreateProductAsync(CreateProductRequest request)
         {
             if (string.IsNullOrWhiteSpace(request.Name) || string.IsNullOrWhiteSpace(request.Description))
             {

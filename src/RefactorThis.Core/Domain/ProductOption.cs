@@ -7,7 +7,7 @@ namespace RefactorThis.Core.Domain
 {
     public class ProductOption
     {
-        public ProductOption(Guid productId, ProductOptionRequest optionRequest)
+        public ProductOption(Guid productId, CreateProductOptionRequest optionRequest)
         {
             Id = Guid.NewGuid();
             Name = optionRequest.Name;
@@ -22,7 +22,7 @@ namespace RefactorThis.Core.Domain
             Description = description;
         }
 
-        public ProductOption(Guid id, Guid productId, ProductOptionRequest optionRequest)
+        public ProductOption(Guid id, Guid productId, UpdateProductOptionRequest optionRequest)
         {
             Id = id;
             Name = optionRequest.Name;
