@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+
 using RefactorThis.Core.Domain;
 using RefactorThis.Core.Domain.Requests;
 using RefactorThis.Core.Interfaces;
@@ -7,7 +9,7 @@ namespace RefactorThis.Core.ProductProcessor
 {
     public interface ICreateProductRequestProcessor
     {
-        void CreateProduct(ProductRequest product);
+        Task CreateProductAsync(ProductRequest product);
     }
     public class CreateProductRequestProcessor : ICreateProductRequestProcessor
     {
@@ -18,7 +20,7 @@ namespace RefactorThis.Core.ProductProcessor
             _productRepository = productRepository;
         }
 
-        public void CreateProduct(ProductRequest request)
+        public async Task CreateProductAsync(ProductRequest request)
         {
             if (string.IsNullOrWhiteSpace(request.Name) || string.IsNullOrWhiteSpace(request.Description))
             {
@@ -30,7 +32,7 @@ namespace RefactorThis.Core.ProductProcessor
                 throw new ArgumentException("Invalid input amount");
             }
             var product = new Product(request);
-            _productRepository.Save(product);
+            await _productRepository.SaveAsync(product);
         }
     }
 }

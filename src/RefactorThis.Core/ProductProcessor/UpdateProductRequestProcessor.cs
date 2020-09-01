@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+
 using RefactorThis.Core.Domain;
 using RefactorThis.Core.Domain.Requests;
 using RefactorThis.Core.Interfaces;
@@ -8,7 +10,7 @@ namespace RefactorThis.Core.ProductProcessor
 {
     public interface IUpdateProductRequestProcessor
     {
-        void UpdateProduct(Guid id, ProductRequest product);
+        Task UpdateProductAsync(Guid id, ProductRequest product);
     }
 
     public class UpdateProductRequestProcessor : IUpdateProductRequestProcessor
@@ -20,7 +22,7 @@ namespace RefactorThis.Core.ProductProcessor
             _productRepository = productRepository;
         }
 
-        public void UpdateProduct(Guid id, ProductRequest productRequest)
+        public async Task UpdateProductAsync(Guid id, ProductRequest productRequest)
         {
             if (string.IsNullOrWhiteSpace(productRequest.Name) || string.IsNullOrWhiteSpace(productRequest.Description))
             {
@@ -32,14 +34,14 @@ namespace RefactorThis.Core.ProductProcessor
                 throw new ArgumentException("Invalid input amount");
             }
 
-            var existProduct = _productRepository.Get(id);
+            var existProduct = await _productRepository.GetAsync(id);
             if (existProduct is null)
             {
                 throw new KeyNotFoundException("Product not found");
             }
 
             var product = new Product(id, productRequest);
-            _productRepository.Update(product);
+            await _productRepository.UpdateAsync(product);
         }
     }
 }

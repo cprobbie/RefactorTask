@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -19,68 +20,66 @@ namespace RefactorThis.Infrastructure
             _dbContext = dbContext;
         }
 
-        public IList<Product> List()
+        public async Task<IList<Product>> ListAsync()
         {
-            return _dbContext.Products.ToList();
+            return await _dbContext.Products.ToListAsync();
         }
 
-        public IList<Product> List(string name)
+        public async Task<IList<Product>> ListAsync(string name)
         {
-            return _dbContext.Products.Where(x => x.Name.ToLower() == name.ToLower()).ToList();
+            return await _dbContext.Products.Where(x => x.Name.ToLower() == name.ToLower()).ToListAsync();
         }
 
-        public IList<ProductOption> ListOptions(Guid productId)
+        public async Task<IList<ProductOption>> ListOptionsAsync(Guid productId)
         {
-            return _dbContext.ProductOptions.Where(x => x.ProductId == productId).ToList();
+            return await _dbContext.ProductOptions.Where(x => x.ProductId == productId).ToListAsync();
         }
-        public Product Get(Guid id)
+        public async Task<Product> GetAsync(Guid id)
         {
-            return _dbContext.Products.SingleOrDefault(x => x.Id == id);
-        }
-
-        public ProductOption GetOption(Guid productId, Guid optionId)
-        {
-            return _dbContext.ProductOptions.SingleOrDefault(x => x.ProductId == productId && x.Id == optionId);
+            return await _dbContext.Products.SingleOrDefaultAsync(x => x.Id == id);
         }
 
-        public void Save(Product product)
+        public async Task<ProductOption> GetOptionAsync(Guid productId, Guid optionId)
         {
-            _dbContext.Products.Add(product);
-            _dbContext.SaveChanges();
+            return await _dbContext.ProductOptions.SingleOrDefaultAsync(x => x.ProductId == productId && x.Id == optionId);
         }
 
-        public void Save(ProductOption productOption)
+        public async Task SaveAsync(Product product)
         {
-            _dbContext.ProductOptions.Add(productOption);
-            _dbContext.SaveChanges();
+            await _dbContext.Products.AddAsync(product);
+            await _dbContext.SaveChangesAsync();
         }
 
-        public void Update(Product product)
+        public async Task SaveAsync(ProductOption productOption)
+        {
+            await _dbContext.ProductOptions.AddAsync(productOption);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(Product product)
         {
             _dbContext.Entry(product).State = EntityState.Modified;
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
 
-        public void Update(ProductOption option)
+        public async Task UpdateAsync(ProductOption option)
         {
             _dbContext.Entry(option).State = EntityState.Modified;
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
-        public void DeleteProduct(Guid id)
+        public async Task DeleteProductAsync(Guid id)
         {
-            var product = _dbContext.Products.Find(id);
+            var product = await _dbContext.Products.FindAsync(id);
             _dbContext.Attach(product);
             _dbContext.Remove(product);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
-        public void DeleteOption(Guid id)
+        public async Task DeleteOptionAsync(Guid id)
         {
-            var option = _dbContext.ProductOptions.Find(id);
+            var option = await _dbContext.ProductOptions.FindAsync(id);
             _dbContext.Attach(option);
             _dbContext.Remove(option);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
-
-
     }
 }

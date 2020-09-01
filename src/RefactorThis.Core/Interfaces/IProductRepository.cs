@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using RefactorThis.Core.Domain;
 
@@ -7,16 +8,16 @@ namespace RefactorThis.Core.Interfaces
 {
     public interface IProductRepository
     {
-        public IList<Product> List();
-        public void Save(Product product);
-        public IList<Product> List(string name);
-        public Product Get(Guid id);
-        public void Update(Product product);
-        public void DeleteProduct(Guid productId);
-        public void DeleteOption(Guid optionId);
-        public IList<ProductOption> ListOptions(Guid productId);
-        public ProductOption GetOption(Guid productId, Guid optionId);
-        public void Save(ProductOption productOption);
-        public void Update(ProductOption option);
+        public Task<IList<Product>> ListAsync();
+        public Task SaveAsync(Product product);
+        public Task<IList<Product>> ListAsync(string name);
+        public Task<Product> GetAsync(Guid id);
+        public Task UpdateAsync(Product product);
+        public Task DeleteProductAsync(Guid productId);
+        public Task DeleteOptionAsync(Guid optionId);
+        public Task<IList<ProductOption>> ListOptionsAsync(Guid productId);
+        public Task<ProductOption> GetOptionAsync(Guid productId, Guid optionId);
+        public Task SaveAsync(ProductOption productOption);
+        public Task UpdateAsync(ProductOption option);
     }
 }

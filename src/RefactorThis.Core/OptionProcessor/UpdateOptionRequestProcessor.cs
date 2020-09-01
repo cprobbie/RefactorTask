@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 using RefactorThis.Core.Domain;
 using RefactorThis.Core.Domain.Requests;
@@ -8,7 +9,7 @@ namespace RefactorThis.Core.OptionProcessor
 {
     public interface IUpdateOptionRequestProcessor
     {
-        void UpdateProductOption(Guid productId, Guid optionId, ProductOptionRequest option);
+        Task UpdateProductOptionAsync(Guid productId, Guid optionId, ProductOptionRequest option);
     }
 
     public class UpdateOptionRequestProcessor : IUpdateOptionRequestProcessor
@@ -20,19 +21,19 @@ namespace RefactorThis.Core.OptionProcessor
             _productRepository = productRepository;
         }
 
-        public void UpdateProductOption(Guid productId, Guid optionId, ProductOptionRequest optionRequest)
+        public async Task UpdateProductOptionAsync(Guid productId, Guid optionId, ProductOptionRequest optionRequest)
         {
             if (string.IsNullOrWhiteSpace(optionRequest.Name) || string.IsNullOrWhiteSpace(optionRequest.Description))
             {
                 throw new ArgumentException("Invalid input string");
             }
-            var existingOption = _productRepository.GetOption(productId, optionId);
+            var existingOption = await _productRepository.GetOptionAsync(productId, optionId);
             if (existingOption is null)
             {
                 throw new ArgumentException("Product Option not found");
             }
             var option = new ProductOption(optionId, productId, optionRequest);
-            _productRepository.Update(option);
+            await _productRepository.UpdateAsync(option);
         }
     }
 }

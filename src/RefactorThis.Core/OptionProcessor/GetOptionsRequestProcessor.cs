@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using RefactorThis.Core.Domain;
 using RefactorThis.Core.Domain.DTOs;
@@ -10,8 +11,8 @@ namespace RefactorThis.Core.OptionProcessor
 {
     public interface IGetOptionsRequestProcessor
     {
-        ProductOptionsDto ListOptions(Guid productId);
-        ProductOption GetOptionById(Guid productId, Guid optionId);
+        Task<ProductOptionsDto> ListOptionsAsync(Guid productId);
+        Task<ProductOption> GetOptionByIdAsync(Guid productId, Guid optionId);
     }
     public class GetOptionsRequestProcessor : IGetOptionsRequestProcessor
     {
@@ -22,9 +23,9 @@ namespace RefactorThis.Core.OptionProcessor
             _productRepository = productRepository;
         }
 
-        public ProductOptionsDto ListOptions(Guid productId)
+        public async Task<ProductOptionsDto> ListOptionsAsync(Guid productId)
         {
-            var options = _productRepository.ListOptions(productId);
+            var options = await _productRepository.ListOptionsAsync(productId);
             if (options is null || !options.Any())
             {
                 throw new KeyNotFoundException("There is no option available");
@@ -32,9 +33,9 @@ namespace RefactorThis.Core.OptionProcessor
             return new ProductOptionsDto(options);
         }
 
-        public ProductOption GetOptionById(Guid productId, Guid optionId)
+        public async Task<ProductOption> GetOptionByIdAsync(Guid productId, Guid optionId)
         {
-            var option = _productRepository.GetOption(productId, optionId);
+            var option = await _productRepository.GetOptionAsync(productId, optionId);
             if (option is null)
             {
                 throw new KeyNotFoundException("Option not found");

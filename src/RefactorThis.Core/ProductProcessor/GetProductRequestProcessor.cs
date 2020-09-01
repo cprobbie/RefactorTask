@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+
 using RefactorThis.Core.Domain;
 using RefactorThis.Core.Domain.DTOs;
 using RefactorThis.Core.Interfaces;
@@ -9,8 +11,8 @@ namespace RefactorThis.Core.ProductProcessor
 {
     public interface IGetProductRequestProcessor
     {
-        ProductsDto ListProducts(string name);
-        Product GetProductById(Guid id);
+        Task<ProductsDto> ListProductsAsync(string name);
+        Task<Product> GetProductByIdAsync(Guid id);
     }
     public class GetProductRequestProcessor : IGetProductRequestProcessor
     {
@@ -21,11 +23,11 @@ namespace RefactorThis.Core.ProductProcessor
             _productRepository = productRepository;
         }
 
-        public ProductsDto ListProducts(string name)
+        public async Task<ProductsDto> ListProductsAsync(string name)
         {
             IList<Product> products = string.IsNullOrWhiteSpace(name) ?
-                _productRepository.List() : 
-                _productRepository.List(name);
+                await _productRepository.ListAsync() : 
+                await _productRepository.ListAsync(name);
 
             if (products is null || !products.Any())
             {
@@ -34,9 +36,9 @@ namespace RefactorThis.Core.ProductProcessor
             return new ProductsDto(products);
         }
 
-        public Product GetProductById(Guid id)
+        public async Task<Product> GetProductByIdAsync(Guid id)
         {
-            var product = _productRepository.Get(id);
+            var product = await _productRepository.GetAsync(id);
             if (product is null)
             {
                 throw new KeyNotFoundException("Product not found");

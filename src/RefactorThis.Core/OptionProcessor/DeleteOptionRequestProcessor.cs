@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Threading.Tasks;
+
 using RefactorThis.Core.Interfaces;
 
 namespace RefactorThis.Core.OptionProcessor
 {
     public interface IDeleteOptionRequestProcessor
     {
-        void DeleteProductOption(Guid productId, Guid optionId);
+        Task DeleteProductOptionAsync(Guid productId, Guid optionId);
     }
     public class DeleteOptionRequestProcessor : IDeleteOptionRequestProcessor
     {
@@ -16,14 +18,14 @@ namespace RefactorThis.Core.OptionProcessor
             _productRepository = productRepository;
         }
 
-        public void DeleteProductOption(Guid productId, Guid optionId)
+        public async Task DeleteProductOptionAsync(Guid productId, Guid optionId)
         {
-            var existingOption = _productRepository.GetOption(productId, optionId);
+            var existingOption = await _productRepository.GetOptionAsync(productId, optionId);
             if (existingOption is null)
             {
                 throw new ArgumentException("Product Option not found");
             }
-            _productRepository.DeleteOption(optionId);
+            await _productRepository.DeleteOptionAsync(optionId);
         }
     }
 }

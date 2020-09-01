@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 using RefactorThis.Core.Domain.Requests;
@@ -28,37 +29,37 @@ namespace RefactorThis.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetOptions(Guid id)
+        public async Task<IActionResult> GetOptions(Guid id)
         {
-            var options = _getOptionsRequestProcessor.ListOptions(id);
+            var options = await _getOptionsRequestProcessor.ListOptionsAsync(id);
             return Ok(options);
         }
 
         [HttpGet("{optionId}")]
-        public IActionResult GetOption(Guid id, Guid optionId)
+        public async Task<IActionResult> GetOption(Guid id, Guid optionId)
         {
-            var option = _getOptionsRequestProcessor.GetOptionById(id, optionId);
+            var option = await _getOptionsRequestProcessor.GetOptionByIdAsync(id, optionId);
             return Ok(option);
         }
 
         [HttpPost]
-        public IActionResult CreateOption(Guid id, [FromBody]ProductOptionRequest optionRequest)
+        public async Task<IActionResult> CreateOption(Guid id, [FromBody]ProductOptionRequest optionRequest)
         {
-            _createOptionRequestProcessor.CreateProductOption(id, optionRequest);
+            await _createOptionRequestProcessor.CreateProductOptionAsync(id, optionRequest);
             return Ok();
         }
 
         [HttpPut("{optionId}")]
-        public IActionResult UpdateOption(Guid id, Guid optionId, [FromBody] ProductOptionRequest optionRequest)
+        public async Task<IActionResult> UpdateOption(Guid id, Guid optionId, [FromBody] ProductOptionRequest optionRequest)
         {
-            _updateOptionRequestProcessor.UpdateProductOption(id, optionId, optionRequest);
+            await _updateOptionRequestProcessor.UpdateProductOptionAsync(id, optionId, optionRequest);
             return Ok();
         }
 
         [HttpDelete("{optionId}")]
-        public IActionResult DeleteOption(Guid id, Guid optionId)
+        public async Task<IActionResult> DeleteOption(Guid id, Guid optionId)
         {
-            _deleteOptionRequestProcessor.DeleteProductOption(id, optionId);
+            await _deleteOptionRequestProcessor.DeleteProductOptionAsync(id, optionId);
             return Ok();
         }
     }

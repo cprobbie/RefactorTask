@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+
 using RefactorThis.Core.Interfaces;
 
 namespace RefactorThis.Core.ProductProcessor
 {
     public interface IDeleteProductRequestProcessor
     {
-        void DeleteProduct(Guid id);
+        Task DeleteProductAsync(Guid id);
     }
     public class DeleteProductRequestProcessor : IDeleteProductRequestProcessor
     {
@@ -17,15 +19,15 @@ namespace RefactorThis.Core.ProductProcessor
             _productRepository = productRepository;
         }
 
-        public void DeleteProduct(Guid id)
+        public async Task DeleteProductAsync(Guid id)
         {
-            var existProduct = _productRepository.Get(id);
+            var existProduct = await _productRepository.GetAsync(id);
             if (existProduct is null)
             {
                 throw new KeyNotFoundException("Product not found");
             }
 
-            _productRepository.DeleteProduct(id);
+            await _productRepository.DeleteProductAsync(id);
         }
     }
 }
