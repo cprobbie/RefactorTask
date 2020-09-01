@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -22,7 +24,7 @@ namespace RefactorThis.Core.Unit.ProductProcessor
         }
 
         [Test]
-        public void GivenProductNameExists_ShouldReturnExpectedProductsResult()
+        public async Task GivenProductNameExists_ShouldReturnExpectedProductsResult()
         {
             // Arrange
             var id = Guid.NewGuid();
@@ -32,16 +34,17 @@ namespace RefactorThis.Core.Unit.ProductProcessor
             };
             var expectedProducts = new ProductsDto(products);
 
-            var queryResult = new List<Product>
+            var queryList = new List<Product>
             {
                 new Product(id, "iPad", "Apple tablet", 1500, 10)
             };
+            IList<Product> queryResult = queryList;
 
-            _productRepo.Setup(x => x.List(It.IsAny<string>())).Returns(queryResult);
+            _productRepo.Setup(x => x.ListAsync(It.IsAny<string>())).Returns(Task.FromResult(queryResult));
             var sut = new GetProductRequestProcessor(_productRepo.Object);
 
             // Act
-            ProductsDto result = sut.ListProducts("iPad");
+            ProductsDto result = await sut.ListProductsAsync("iPad");
 
             // Assert
             result.Should().NotBeNull();
@@ -49,29 +52,37 @@ namespace RefactorThis.Core.Unit.ProductProcessor
         }
 
         [Test]
-        public void GivenProductListNull_ShouldThrowKeyNotFoundException()
+        public async Task GivenProductListNull_ShouldThrowKeyNotFoundException()
         {
             // Arrange
-            _productRepo.Setup(x => x.List(It.IsAny<string>())).Returns((IList<Product>)null);
+            _productRepo.Setup(x => x.ListAsync(It.IsAny<string>())).Returns(Task.FromResult((IList<Product>)null));
             var sut = new GetProductRequestProcessor(_productRepo.Object);
 
-            // Act and Assert
-            sut.Invoking(x => x.ListProducts("iPad")).Should().Throw<KeyNotFoundException>().WithMessage("There is no product");
+            // Act 
+            Func<Task> act = async () => { await sut.ListProductsAsync("iPad"); };
+
+            // Assert
+            await act.Should().ThrowAsync<KeyNotFoundException>().WithMessage("There is no product");
         }
 
         [Test]
-        public void GivenProductListEmpty_ShouldThrowKeyNotFoundException()
+        public async Task GivenProductListEmpty_ShouldThrowKeyNotFoundException()
         {
             // Arrange
-            _productRepo.Setup(x => x.List(It.IsAny<string>())).Returns(new List<Product>());
+            var productList = new List<Product>();
+            IList<Product> queryResult = productList;
+            _productRepo.Setup(x => x.ListAsync(It.IsAny<string>())).Returns(Task.FromResult(queryResult));
             var sut = new GetProductRequestProcessor(_productRepo.Object);
 
-            // Act and Assert
-            sut.Invoking(x => x.ListProducts("iPad")).Should().Throw<KeyNotFoundException>().WithMessage("There is no product");
+            // Act 
+            Func<Task> act = async () => { await sut.ListProductsAsync("iPad"); };
+
+            // Assert
+            await act.Should().ThrowAsync<KeyNotFoundException>().WithMessage("There is no product");
         }
 
         [Test]
-        public void GivenProductNameNullOrEmpty_ShouldListAllProducts()
+        public async Task GivenProductNameNullOrEmpty_ShouldListAllProducts()
         {
             // Arrange
             var id1 = Guid.NewGuid();
@@ -83,18 +94,19 @@ namespace RefactorThis.Core.Unit.ProductProcessor
             };
             var expectedProductsDto = new ProductsDto(products);
 
-            var queryResult = new List<Product>
+            var queryList = new List<Product>
             {
                 new Product(id1, "iPad", "Apple tablet", 1500, 10),
                 new Product(id2, "MacBook", "Apple laptop", 2000, 15)
             };
+            IList<Product> queryResult = queryList;
 
             _productRepo = new Mock<IProductRepository>();
-            _productRepo.Setup(x => x.List()).Returns(queryResult);
+            _productRepo.Setup(x => x.ListAsync()).Returns(Task.FromResult(queryResult));
             var sut = new GetProductRequestProcessor(_productRepo.Object);
 
             // Act
-            var result = sut.ListProducts(null);
+            var result = await sut.ListProductsAsync(null);
 
             // Assert
             result.Should().NotBeNull();
@@ -114,17 +126,17 @@ namespace RefactorThis.Core.Unit.ProductProcessor
         }
 
         [Test]
-        public void GivenValidId_ShouldReturnProduct()
+        public async Task GivenValidId_ShouldReturnProduct()
         {
             // Arrange
             var id = Guid.NewGuid();
             var expectedProduct = new Product(id, "iPad", "Apple tablet", 800, 15);
             var queryResult = new Product(id, "iPad", "Apple tablet", 800, 15);
-            _productRepo.Setup(x => x.Get(It.IsAny<Guid>())).Returns(queryResult);
+            _productRepo.Setup(x => x.GetAsync(It.IsAny<Guid>())).Returns(Task.FromResult(queryResult));
             var sut = new GetProductRequestProcessor(_productRepo.Object);
 
             // Act
-            var result = sut.GetProductById(It.IsAny<Guid>());
+            var result = await sut.GetProductByIdAsync(It.IsAny<Guid>());
 
             // Assert
             result.Should().NotBeNull();
@@ -132,14 +144,17 @@ namespace RefactorThis.Core.Unit.ProductProcessor
         }
 
         [Test]
-        public void GivenIdNonExists_ShouldThrowKeyNotFoundException()
+        public async Task GivenIdNonExists_ShouldThrowKeyNotFoundException()
         {
             // Arrange
-            _productRepo.Setup(x => x.Get(It.IsAny<Guid>())).Returns((Product)null);
+            _productRepo.Setup(x => x.GetAsync(It.IsAny<Guid>())).Returns(Task.FromResult((Product)null));
             var sut = new GetProductRequestProcessor(_productRepo.Object);
 
-            // Act and Assert
-            sut.Invoking(x => x.GetProductById(It.IsAny<Guid>())).Should().Throw<KeyNotFoundException>().WithMessage("Product not found");
+            // Act 
+            Func<Task> act = async () => { await sut.GetProductByIdAsync(It.IsAny<Guid>()); };
+
+            // Assert
+            await act.Should().ThrowAsync<KeyNotFoundException>().WithMessage("Product not found");
         }
     }
 }

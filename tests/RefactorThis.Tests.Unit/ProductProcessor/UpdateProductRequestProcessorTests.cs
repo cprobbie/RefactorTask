@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+
 using AutoFixture;
 using FluentAssertions;
 using Moq;
@@ -17,6 +19,7 @@ namespace RefactorThis.Core.Unit.ProductProcessor
         private Fixture _fixture;
         private Mock<IProductRepository> _productRepositoryMock;
         private UpdateProductRequestProcessor _sut;
+        private Product _queryResult;
 
         [SetUp]
         public void Setup()
@@ -24,43 +27,46 @@ namespace RefactorThis.Core.Unit.ProductProcessor
             _fixture = new Fixture();
             _productRepositoryMock = new Mock<IProductRepository>();
             _sut = new UpdateProductRequestProcessor(_productRepositoryMock.Object);
-            _productRepositoryMock.Setup(x => x.Update(It.IsAny<Product>()));
+            _productRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<Product>())).Returns(Task.CompletedTask);
+            _queryResult = _fixture.Create<Product>();
         }
 
         [Test]
-        public void GiveValidInputs_ShouldUpdateProduct()
+        public async Task GiveValidInputs_ShouldUpdateProduct()
         {
             // Arrange
             var request = _fixture.Create<ProductRequest>();
-            var queryResult = _fixture.Create<Product>();
-            _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(queryResult);
+            _productRepositoryMock.Setup(x => x.GetAsync(It.IsAny<Guid>())).Returns(Task.FromResult(_queryResult));
 
             // Act
-            _sut.UpdateProduct(It.IsAny<Guid>(), request);
+            await _sut.UpdateProductAsync(It.IsAny<Guid>(), request);
 
             // Assert
-            _productRepositoryMock.Verify(x => x.Update(It.IsAny<Product>()), Times.Once);
+            _productRepositoryMock.Verify(x => x.UpdateAsync(It.IsAny<Product>()), Times.Once);
         }
 
         [TestCase("name", null)]
         [TestCase(" ", "some description")]
-        public void GivenInvalidString_ShouldThrowArgumentException(string name, string description)
+        public async Task GivenInvalidString_ShouldThrowArgumentException(string name, string description)
         {
             // Arrange
-            var product = _fixture.Build<ProductRequest>()
+            var request = _fixture.Build<ProductRequest>()
                 .With(x => x.Name, name)
                 .With(x => x.Description, description)
                 .Create();
 
-            _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(It.IsAny<Product>);
+            _productRepositoryMock.Setup(x => x.GetAsync(It.IsAny<Guid>())).Returns(Task.FromResult(_queryResult));
 
-            // Act and Assert
-            _sut.Invoking(x => x.UpdateProduct(It.IsAny<Guid>(), product)).Should().Throw<ArgumentException>().WithMessage("Invalid input string");
+            // Act 
+            Func<Task> act = async () => { await _sut.UpdateProductAsync(It.IsAny<Guid>(), request); };
+
+            // Assert
+            await act.Should().ThrowAsync<ArgumentException>().WithMessage("Invalid input string");
         }
 
         [TestCase(-1, 199)]
         [TestCase(100, -10)]
-        public void GivenInvalidAmount_ShouldThrowArgumentException(decimal price, decimal deliveryPrice)
+        public async Task GivenInvalidAmount_ShouldThrowArgumentException(decimal price, decimal deliveryPrice)
         {
             // Arrange
             var request = _fixture.Build<ProductRequest>()
@@ -68,21 +74,27 @@ namespace RefactorThis.Core.Unit.ProductProcessor
                 .With(x => x.DeliveryPrice, deliveryPrice)
                 .Create();
 
-            _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(It.IsAny<Product>);
+            _productRepositoryMock.Setup(x => x.GetAsync(It.IsAny<Guid>())).Returns(Task.FromResult(_queryResult));
 
-            // Act and Assert
-            _sut.Invoking(x => x.UpdateProduct(It.IsAny<Guid>(), request)).Should().Throw<ArgumentException>().WithMessage("Invalid input amount");
+            // Act 
+            Func<Task> act = async () => { await _sut.UpdateProductAsync(It.IsAny<Guid>(), request); };
+
+            // Assert
+            await act.Should().ThrowAsync<ArgumentException>().WithMessage("Invalid input amount");
         }
 
         [Test]
-        public void GivenProductNotExist_ShouldThrowKeyNotFoundException()
+        public async Task GivenProductNotExist_ShouldThrowKeyNotFoundException()
         {
             // Arrange
             var request = _fixture.Create<ProductRequest>();
-            _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns((Product)null);
+            _productRepositoryMock.Setup(x => x.GetAsync(It.IsAny<Guid>())).Returns(Task.FromResult((Product)null));
 
-            // Act and Assert
-            _sut.Invoking(x => x.UpdateProduct(It.IsAny<Guid>(), request)).Should().Throw<KeyNotFoundException>().WithMessage("Product not found");
+            // Act 
+            Func<Task> act = async () => { await _sut.UpdateProductAsync(It.IsAny<Guid>(), request); };
+
+            // Assert
+            await act.Should().ThrowAsync<KeyNotFoundException>().WithMessage("Product not found");
         }
     }
 }

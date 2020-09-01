@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -21,7 +23,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
         }
 
         [Test]
-        public void GivenProductOptionsExist_ShouldReturnExpectedOptionsResult()
+        public async Task GivenProductOptionsExist_ShouldReturnExpectedOptionsResult()
         {
             // Arrange
             var id1 = Guid.NewGuid();
@@ -35,18 +37,18 @@ namespace RefactorThis.Core.Unit.OptionProcessor
 
             var expectedDto = new ProductOptionsDto(options);
             
-            var queryResult = new List<ProductOption>
+            var queryList = new List<ProductOption>
             {
                 new ProductOption(id1, "32G", "32G storage"),
                 new ProductOption(id2, "64G", "64G storage")
             };
-            
+            IList<ProductOption> queryResult = queryList;
 
             var sut = new GetOptionsRequestProcessor(_productRepositoryMock.Object);
-            _productRepositoryMock.Setup(x => x.ListOptions(It.IsAny<Guid>())).Returns(queryResult);
+            _productRepositoryMock.Setup(x => x.ListOptionsAsync(It.IsAny<Guid>())).Returns(Task.FromResult(queryResult));
 
             // Act
-            var result = sut.ListOptions(It.IsAny<Guid>());
+            var result = await sut.ListOptionsAsync(It.IsAny<Guid>());
 
             // Assert
             result.Should().NotBeNull();
@@ -54,24 +56,33 @@ namespace RefactorThis.Core.Unit.OptionProcessor
         }
 
         [Test]
-        public void GivenProductOptionsListNull_ShouldReturnNull()
+        public async Task GivenProductOptionsListNull_ShouldReturnKeyNotFoundException()
         {
             // Arrange
             var sut = new GetOptionsRequestProcessor(_productRepositoryMock.Object);
-            _productRepositoryMock.Setup(x => x.ListOptions(It.IsAny<Guid>())).Returns((IList<ProductOption>)null);
+            _productRepositoryMock.Setup(x => x.ListOptionsAsync(It.IsAny<Guid>())).Returns(Task.FromResult((IList<ProductOption>)null));
 
-            // Act and Assert
-            sut.Invoking(x => x.ListOptions(It.IsAny<Guid>())).Should().Throw<KeyNotFoundException>().WithMessage("There is no option available");
+            // Act 
+            Func<Task> act = async () => { await sut.ListOptionsAsync(It.IsAny<Guid>()); };
+
+            // Assert
+            await act.Should().ThrowAsync<KeyNotFoundException>().WithMessage("There is no option available");
         }
+
         [Test]
-        public void GivenProductOptionsListEmpty_ShouldReturnNull()
+        public async Task GivenProductOptionsListEmpty_ShouldReturnKeyNotFoundException()
         {
             // Arrange
             var sut = new GetOptionsRequestProcessor(_productRepositoryMock.Object);
-            _productRepositoryMock.Setup(x => x.ListOptions(It.IsAny<Guid>())).Returns(new List<ProductOption>());
+            var optionList = new List<ProductOption>();
+            IList<ProductOption> queryResult = optionList;
+            _productRepositoryMock.Setup(x => x.ListOptionsAsync(It.IsAny<Guid>())).Returns(Task.FromResult(queryResult));
 
-            // Act and Assert
-            sut.Invoking(x=> x.ListOptions(It.IsAny<Guid>())).Should().Throw<KeyNotFoundException>().WithMessage("There is no option available");
+            // Act 
+            Func<Task> act = async () => { await sut.ListOptionsAsync(It.IsAny<Guid>()); };
+
+            // Assert
+            await act.Should().ThrowAsync<KeyNotFoundException>().WithMessage("There is no option available");
         }
     }
 
@@ -86,7 +97,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
         }
 
         [Test]
-        public void GivenProductOptionExist_ShouldReturnExpectedOptionResult()
+        public async Task GivenProductOptionExist_ShouldReturnExpectedOptionResult()
         {
             // Arrange
             var id = Guid.NewGuid();
@@ -96,10 +107,10 @@ namespace RefactorThis.Core.Unit.OptionProcessor
 
 
             var sut = new GetOptionsRequestProcessor(_productRepositoryMock.Object);
-            _productRepositoryMock.Setup(x => x.GetOption(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(queryResult);
+            _productRepositoryMock.Setup(x => x.GetOptionAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(Task.FromResult(queryResult));
 
             // Act
-            var result = sut.GetOptionById(It.IsAny<Guid>(), It.IsAny<Guid>());
+            var result = await sut.GetOptionByIdAsync(It.IsAny<Guid>(), It.IsAny<Guid>());
 
             // Assert
             result.Should().NotBeNull();
@@ -107,14 +118,17 @@ namespace RefactorThis.Core.Unit.OptionProcessor
         }
 
         [Test]
-        public void GivenProductOptionNonExist_ShouldThrowNotFoundException()
+        public async Task GivenProductOptionNonExist_ShouldThrowKeyNotFoundException()
         {
             // Arrange
             var sut = new GetOptionsRequestProcessor(_productRepositoryMock.Object);
-            _productRepositoryMock.Setup(x => x.GetOption(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns((ProductOption)null);
+            _productRepositoryMock.Setup(x => x.GetOptionAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(Task.FromResult((ProductOption)null));
 
-            // Act and Assert
-            sut.Invoking(x => x.GetOptionById(It.IsAny<Guid>(), It.IsAny<Guid>())).Should().Throw<KeyNotFoundException>().WithMessage("Option not found");
+            // Act 
+            Func<Task> act = async () => { await sut.GetOptionByIdAsync(It.IsAny<Guid>(), It.IsAny<Guid>()); };
+
+            // Assert
+            await act.Should().ThrowAsync<KeyNotFoundException>().WithMessage("Option not found");
         }
     }
 }

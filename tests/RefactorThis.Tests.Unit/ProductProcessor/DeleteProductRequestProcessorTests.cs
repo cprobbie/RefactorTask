@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -20,31 +22,34 @@ namespace RefactorThis.Core.Unit.ProductProcessor
         {
             _productRepositoryMock = new Mock<IProductRepository>();
             _sut = new DeleteProductRequestProcessor(_productRepositoryMock.Object);
-            _productRepositoryMock.Setup(x => x.DeleteProduct(It.IsAny<Guid>()));
+            _productRepositoryMock.Setup(x => x.DeleteProductAsync(It.IsAny<Guid>())).Returns(Task.CompletedTask);
         }
 
         [Test]
-        public void GiveValidId_ShouldDeleteProduct()
+        public async Task GivenValidId_ShouldDeleteProduct()
         {
             // Arrange
             var queryResult = new Product(Guid.NewGuid(), "iPad", "Apple tablet", 1000, 100);
-            _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(queryResult);
+            _productRepositoryMock.Setup(x => x.GetAsync(It.IsAny<Guid>())).Returns(Task.FromResult(queryResult));
 
             // Act
-            _sut.DeleteProduct(It.IsAny<Guid>());
+            await _sut.DeleteProductAsync(It.IsAny<Guid>());
 
             // Assert
-            _productRepositoryMock.Verify(x => x.DeleteProduct(It.IsAny<Guid>()), Times.Once);
+            _productRepositoryMock.Verify(x => x.DeleteProductAsync(It.IsAny<Guid>()), Times.Once);
         }
 
         [Test]
-        public void GivenProductNotExists_ShouldThrowKeyNotFoundException()
+        public async Task GivenProductNotExists_ShouldThrowKeyNotFoundException()
         {
             // Arrange
-            _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns((Product)null);
+            _productRepositoryMock.Setup(x => x.GetAsync(It.IsAny<Guid>())).Returns(Task.FromResult((Product)null));
 
-            // Act and Assert
-            _sut.Invoking(x => x.DeleteProduct(It.IsAny<Guid>())).Should().Throw<KeyNotFoundException>().WithMessage("Product not found");
+            // Act 
+            Func<Task> act = async () => { await _sut.DeleteProductAsync(It.IsAny<Guid>()); };
+
+            // Assert
+            await act.Should().ThrowAsync<KeyNotFoundException>().WithMessage("Product not found");
         }
     }
 }

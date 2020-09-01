@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+
 using AutoFixture;
 
 using FluentAssertions;
@@ -27,26 +29,27 @@ namespace RefactorThis.Core.Unit.OptionProcessor
             _fixture = new Fixture();
             _productRepositoryMock = new Mock<IProductRepository>();
             _sut = new CreateOptionRequestProcessor(_productRepositoryMock.Object);
-            _productRepositoryMock.Setup(x => x.Save(It.IsAny<ProductOption>()));
+            _productRepositoryMock.Setup(x => x.SaveAsync(It.IsAny<ProductOption>())).Returns(Task.CompletedTask);
             _product = _fixture.Create<Product>();
         }
 
         [Test]
-        public void GiveValidInputs_ShouldSaveProductOption()
+        public async Task GiveValidInputs_ShouldSaveProductOption()
         {
             // Arrange
             var optionRequest = _fixture.Create<ProductOptionRequest>();
-            _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(_product);
+            _productRepositoryMock.Setup(x => x.GetAsync(It.IsAny<Guid>())).Returns(Task.FromResult(_product));
 
             // Act
-            _sut.CreateProductOption(It.IsAny<Guid>(), optionRequest);
+            await _sut.CreateProductOptionAsync(It.IsAny<Guid>(), optionRequest);
+
             // Assert
-            _productRepositoryMock.Verify(x => x.Save(It.IsAny<ProductOption>()), Times.Once);
+            _productRepositoryMock.Verify(x => x.SaveAsync(It.IsAny<ProductOption>()), Times.Once);
         }
 
         [TestCase("name", null)]
         [TestCase(" ", "some description")]
-        public void GivenInvalidString_ShouldThrowArgumentException(string name, string description)
+        public async Task GivenInvalidString_ShouldThrowArgumentException(string name, string description)
         {
             // Arrange
             var optionRequest = _fixture.Build<ProductOptionRequest>()
@@ -54,23 +57,27 @@ namespace RefactorThis.Core.Unit.OptionProcessor
                 .With(x => x.Description, description)
                 .Create();
 
-            _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(_product);
+            _productRepositoryMock.Setup(x => x.GetAsync(It.IsAny<Guid>())).Returns(Task.FromResult(_product));
 
-            // Act and Assert
-            _sut.Invoking(x => x.CreateProductOption(It.IsAny<Guid>(), optionRequest))
-                .Should().Throw<ArgumentException>().WithMessage("Invalid input string");
+            // Act 
+            Func<Task> act = async () => { await _sut.CreateProductOptionAsync(It.IsAny<Guid>(), optionRequest); };
+            
+            // Assert
+            await act.Should().ThrowAsync<ArgumentException>().WithMessage("Invalid input string");
         }
 
         [Test]
-        public void GivenProductNonExists_ShouldThrowArgumentException()
+        public async Task GivenProductNonExists_ShouldThrowArgumentException()
         {
             // Arrange
             var optionRequest = _fixture.Create<ProductOptionRequest>();
-            _productRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns((Product)null);
+            _productRepositoryMock.Setup(x => x.GetAsync(It.IsAny<Guid>())).Returns(Task.FromResult((Product)null));
 
-            // Act and Assert
-            _sut.Invoking(x => x.CreateProductOption(It.IsAny<Guid>(), optionRequest))
-                .Should().Throw<ArgumentException>().WithMessage("Product does not exist");
+            // Act 
+            Func<Task> act = async () => { await _sut.CreateProductOptionAsync(It.IsAny<Guid>(), optionRequest); };
+
+            // Assert
+            await act.Should().ThrowAsync<ArgumentException>().WithMessage("Product does not exist");
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 using FluentAssertions;
 using Moq;
@@ -27,27 +28,29 @@ namespace RefactorThis.Core.Unit.OptionProcessor
         }
 
         [Test]
-        public void GiveValidInputs_ShouldDeleteProductOption()
+        public async Task GiveValidInputs_ShouldDeleteProductOption()
         {
             // Arrange
-            _productRepositoryMock.Setup(x => x.GetOption(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(_option);
+            _productRepositoryMock.Setup(x => x.GetOptionAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(Task.FromResult(_option));
 
             // Act
-            _sut.DeleteProductOption(It.IsAny<Guid>(), It.IsAny<Guid>());
+            await _sut.DeleteProductOptionAsync(It.IsAny<Guid>(), It.IsAny<Guid>());
 
             // Assert
-            _productRepositoryMock.Verify(x => x.DeleteOption(It.IsAny<Guid>()), Times.Once);
+            _productRepositoryMock.Verify(x => x.DeleteOptionAsync(It.IsAny<Guid>()), Times.Once);
         }
 
         [Test]
-        public void GivenOptionIdNonExists_ShouldThrowArgumentException()
+        public async Task GivenOptionIdNonExists_ShouldThrowArgumentException()
         {
             // Arrange
-            _productRepositoryMock.Setup(x => x.GetOption(It.IsAny<Guid>(), _option.Id)).Returns((ProductOption)null);
+            _productRepositoryMock.Setup(x => x.GetOptionAsync(It.IsAny<Guid>(), _option.Id)).Returns(Task.FromResult((ProductOption)null));
 
-            // Act and Assert
-            _sut.Invoking(x => x.DeleteProductOption(It.IsAny<Guid>(), It.IsAny<Guid>()))
-                .Should().Throw<ArgumentException>().WithMessage("Product Option not found");
+            // Act 
+            Func<Task> act = async () => { await _sut.DeleteProductOptionAsync(It.IsAny<Guid>(), It.IsAny<Guid>()); };
+
+            // Assert
+            await act.Should().ThrowAsync<ArgumentException>().WithMessage("Product Option not found");
         }
     }
 }
