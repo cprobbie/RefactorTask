@@ -22,6 +22,10 @@ namespace RefactorThis.Api
                 code = HttpStatusCode.NotFound;
                 errorMessage = notFoundEx.Message;
             }
+            else if (context.Exception is Exception ex)
+            {
+                errorMessage = errorMessage + ": " + ex.Message;
+            }
 
             var result = new ObjectResult(errorMessage) { StatusCode = (int)code};
             context.Result = result;
