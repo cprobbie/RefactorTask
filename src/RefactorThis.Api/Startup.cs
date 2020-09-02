@@ -26,10 +26,9 @@ namespace RefactorThis.Api
             });
             services.AddScoped<IProductRepository, ProductRepository>();
 
-            services.AddControllers(options => 
-            { 
-                options.Filters.Add(typeof(ExceptionFilter)); 
-            });
+            services.AddControllers(options => { options.Filters.Add(typeof(ExceptionFilter));})
+                    .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
+
             Core.Bootstrap.ConfigureServices(services);
             services.AddSwaggerGen();
         }
