@@ -25,7 +25,7 @@ namespace RefactorThis.Core.OptionProcessor
             {
                 throw new ArgumentException("Product Option not exists");
             }
-            await _productRepository.DeleteOptionAsync(optionId);
+            await _productRepository.DeleteOptionAsync(existingOption);
         }
     }
 }

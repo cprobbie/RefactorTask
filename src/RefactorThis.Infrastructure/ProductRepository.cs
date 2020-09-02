@@ -27,21 +27,25 @@ namespace RefactorThis.Infrastructure
 
         public async Task<IList<Product>> ListAsync(string name)
         {
-            return await _dbContext.Products.Where(x => x.Name.ToLower() == name.ToLower()).ToListAsync();
+            return await _dbContext.Products
+                .Where(x => x.Name.ToLower() == name.ToLower()).ToListAsync();
         }
 
         public async Task<IList<ProductOption>> ListOptionsAsync(Guid productId)
         {
-            return await _dbContext.ProductOptions.Where(x => x.ProductId == productId).ToListAsync();
+            return await _dbContext.ProductOptions
+                .Where(x => x.ProductId == productId).ToListAsync();
         }
         public async Task<Product> GetAsync(Guid id)
         {
-            return await _dbContext.Products.SingleOrDefaultAsync(x => x.Id == id);
+            return await _dbContext.Products.AsNoTracking()
+                .SingleOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<ProductOption> GetOptionAsync(Guid productId, Guid optionId)
         {
-            return await _dbContext.ProductOptions.SingleOrDefaultAsync(x => x.ProductId == productId && x.Id == optionId);
+            return await _dbContext.ProductOptions.AsNoTracking()
+                .SingleOrDefaultAsync(x => x.ProductId == productId && x.Id == optionId);
         }
 
         public async Task SaveAsync(Product product)
@@ -58,25 +62,23 @@ namespace RefactorThis.Infrastructure
 
         public async Task UpdateAsync(Product product)
         {
-            _dbContext.Entry(product).State = EntityState.Modified;
+            _dbContext.Update(product);
             await _dbContext.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(ProductOption option)
         {
-            _dbContext.Entry(option).State = EntityState.Modified;
+            _dbContext.Update(option);
             await _dbContext.SaveChangesAsync();
         }
-        public async Task DeleteProductAsync(Guid id)
+        public async Task DeleteProductAsync(Product product)
         {
-            var product = await _dbContext.Products.FindAsync(id);
             _dbContext.Attach(product);
             _dbContext.Remove(product);
             await _dbContext.SaveChangesAsync();
         }
-        public async Task DeleteOptionAsync(Guid id)
+        public async Task DeleteOptionAsync(ProductOption option)
         {
-            var option = await _dbContext.ProductOptions.FindAsync(id);
             _dbContext.Attach(option);
             _dbContext.Remove(option);
             await _dbContext.SaveChangesAsync();

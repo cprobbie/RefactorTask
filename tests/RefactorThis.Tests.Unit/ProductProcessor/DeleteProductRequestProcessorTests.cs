@@ -22,7 +22,7 @@ namespace RefactorThis.Core.Unit.ProductProcessor
         {
             _productRepositoryMock = new Mock<IProductRepository>();
             _sut = new DeleteProductRequestProcessor(_productRepositoryMock.Object);
-            _productRepositoryMock.Setup(x => x.DeleteProductAsync(It.IsAny<Guid>())).Returns(Task.CompletedTask);
+            _productRepositoryMock.Setup(x => x.DeleteProductAsync(It.IsAny<Product>())).Returns(Task.CompletedTask);
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace RefactorThis.Core.Unit.ProductProcessor
             await _sut.DeleteProductAsync(It.IsAny<Guid>());
 
             // Assert
-            _productRepositoryMock.Verify(x => x.DeleteProductAsync(It.IsAny<Guid>()), Times.Once);
+            _productRepositoryMock.Verify(x => x.DeleteProductAsync(queryResult), Times.Once);
         }
 
         [Test]

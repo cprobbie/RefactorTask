@@ -27,7 +27,7 @@ namespace RefactorThis.Core.ProductProcessor
                 throw new ArgumentException("Product not exists");
             }
 
-            await _productRepository.DeleteProductAsync(id);
+            await _productRepository.DeleteProductAsync(existProduct);
         }
     }
 }

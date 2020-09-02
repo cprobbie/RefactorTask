@@ -13,8 +13,8 @@ namespace RefactorThis.Core.Interfaces
         public Task<IList<Product>> ListAsync(string name);
         public Task<Product> GetAsync(Guid id);
         public Task UpdateAsync(Product product);
-        public Task DeleteProductAsync(Guid productId);
-        public Task DeleteOptionAsync(Guid optionId);
+        public Task DeleteProductAsync(Product product);
+        public Task DeleteOptionAsync(ProductOption option);
         public Task<IList<ProductOption>> ListOptionsAsync(Guid productId);
         public Task<ProductOption> GetOptionAsync(Guid productId, Guid optionId);
         public Task SaveAsync(ProductOption productOption);
