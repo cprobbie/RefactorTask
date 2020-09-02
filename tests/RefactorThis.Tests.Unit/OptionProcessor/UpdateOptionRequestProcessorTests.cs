@@ -76,7 +76,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
             Func<Task> act = async () => { await _sut.UpdateProductOptionAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), request); };
 
             // Assert
-            await act.Should().ThrowAsync<ArgumentException>().WithMessage("Product Option not found");
+            await act.Should().ThrowAsync<ArgumentException>().WithMessage("Product Option not exists, update failed");
         }
     }
 }

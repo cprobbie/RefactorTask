@@ -30,7 +30,7 @@ namespace RefactorThis.Core.OptionProcessor
             var existingOption = await _productRepository.GetOptionAsync(productId, optionId);
             if (existingOption is null)
             {
-                throw new ArgumentException("Product Option not found");
+                throw new ArgumentException("Product Option not exists, update failed");
             }
             var option = new ProductOption(optionId, productId, optionRequest);
             await _productRepository.UpdateAsync(option);

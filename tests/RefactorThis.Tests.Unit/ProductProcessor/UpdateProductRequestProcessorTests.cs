@@ -94,7 +94,7 @@ namespace RefactorThis.Core.Unit.ProductProcessor
             Func<Task> act = async () => { await _sut.UpdateProductAsync(It.IsAny<Guid>(), request); };
 
             // Assert
-            await act.Should().ThrowAsync<KeyNotFoundException>().WithMessage("Product not found");
+            await act.Should().ThrowAsync<ArgumentException>().WithMessage("Product not exists, update failed");
         }
     }
 }
