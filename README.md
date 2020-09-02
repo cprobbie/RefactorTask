@@ -1,28 +1,28 @@
 
 ## The Problem
 
-This is a API service which is required to manage products for a users.
+This is a API service which is required to manage products for users.
 
-The current solution has the following major issues:
+The original code has the following major issues:
 
 - Vulnerable to SQL injection
-- Business logic in Controller, no separation of concerns
+- Business logic in the Controller, no separation of concerns
 - No input validation
 - No tests
 
 ## The Task
 
-The API needs to be refactored to meet production standard as well as easy for other developers to understand and develop new features. To achieve this goal, it needs to have a good and suitable software architecture, dependency injections for good unit test coverage, exception handling, logging and API documenting capability.
+The API needs to be refactored to meet production standards as well as easy for other developers to understand and develop new features. To achieve this goal, it needs to have a good and suitable software architecture, dependency injections for good unit test coverage, exception handling, logging and API documenting capability.
 
 ## My Approach
 
-In terms of software architecture, I used a Domain-centric 3-Layer architecture. The three layers are API layer which dictates the input and output, Domain layer which contains all the business logic and Infrastructure layer which handles the interaction with database. In my option, this architecture is a good fit for this project as it needs to achieve CRUD functionality and without having complex business logic. This architecture follows Inversion of Control (IoC) principle where API and Infrastructure depend on Domain but Domain does not depend on either of them. 
+In terms of software architecture, I used a Domain-centric 3-Layer architecture. The three layers are API layer which dictates the inputs and outputs, Domain layer which contains all the business logic and Infrastructure layer which handles the interaction with database. In my option, this architecture is a good fit for this project as it needs to achieve CRUD functionality and without having complex business logic. This architecture follows Inversion of Control (IoC) principle where API and Infrastructure depend on Domain but Domain does not depend on either of them. 
 
-As business logic is centralised in the Domain layer, even though the unit tests only care about the class being tested, with the use of Test-Driven-Development approach writing the processors, business logic is well assured. All the exceptions thrown are caught by the Exception filter which will then send the corresponding HTTP code and message in the API response.
+As business logic is centralised in the Domain layer, even though the unit tests only care about the class being tested, with the use of Test-Driven-Development applied on writing the processors, business logic is well assured. All the exceptions thrown are caught by the Exception filter which will then return the corresponding HTTP code and message in the API response to the users.
 
 To solve the SQL injection vulnerability, I removed all the raw SQL and introduced Entity Framework Core for database access.
 
-I have implemented the following frameworks and Nuget packages to refactor the API to meet production standard:
+I have implemented the following frameworks and Nuget packages to refactor the API to meet production standards:
 
 - Entity Framework Core
 - Upgraded to ASP.NET Core 3.1
@@ -34,15 +34,15 @@ I have implemented the following frameworks and Nuget packages to refactor the A
 
 Once you have cloned/unzipped the code, open `RefactorThis.sln` using Visual Studio.
 
-The recommended way to run it is to use Visual Studio. Everything is ready, just need to click Start (IIS Express). You may prefer to run the tests first, they should all be passed.
+The recommended way to run it is to use Visual Studio. Everything is ready, just need to click Start (IIS Express). You may prefer to run the tests first, they should all pass.
 
 ## How To Test
 
-Once the project has been started, it will land on the Swagger index by default. Alternatively, you can go to this url: [`https://localhost:44335/swagger/index.html`](https://localhost:44335/swagger/index.html)
+Once the project has been started, it will land on the Swagger index by default. Alternatively, you can go to this URL: [`https://localhost:44335/swagger/index.html`](https://localhost:44335/swagger/index.html)
 
-You should see RefactorThis API v1 endpoints and you are ready to play. After clicking on the endpoint, it will show a [Try it out] button. Click on it and you can enter your inputs and click on the Execute button. You will see the HTTP status code and response message in the Responses section.
+You should see RefactorThis API v1 endpoints and you are ready to play. After clicking on any of the endpoints, it will show a [Try it out] button. Click on it and you can enter your inputs and click on the Execute button to send a request. You will see the HTTP status code and response message in the Responses section.
 
-You may want to start with GET Products to find out what products currently in the database.
+You may want to start with `GET Products` to find out what products are currently in the database.
 
 I have included some example payloads for POST and PUT endpoints below.
 
@@ -72,7 +72,7 @@ I have included some example payloads for POST and PUT endpoints below.
 
 ## How to check logs
 
-It's important that you can keep track of the processes. I have implemented logging in the controllers.
+It's important that you can keep track of the requests. I have implemented logging in the controllers.
 
 In Visual Studio, open Output window, go to `Show output from:` and select `RefactorThis.Api - ASP.NET Core Web Server`.  For each successful request, you will see an information log message confirming it.
 
