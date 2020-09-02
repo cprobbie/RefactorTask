@@ -9,7 +9,7 @@ using RefactorThis.Core.OptionProcessor;
 
 namespace RefactorThis.Api.Controllers
 {
-    [Route("api/v1/products/{id}/[controller]")]
+    [Route("api/v1/Products/{id}/[controller]")]
     [ApiController]
     public class OptionsController : ControllerBase
     {
