@@ -50,7 +50,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
             Func<Task> act = async () => { await _sut.DeleteProductOptionAsync(It.IsAny<Guid>(), It.IsAny<Guid>()); };
 
             // Assert
-            await act.Should().ThrowAsync<ArgumentException>().WithMessage("Product Option not found");
+            await act.Should().ThrowAsync<ArgumentException>().WithMessage("Product Option not exists");
         }
     }
 }

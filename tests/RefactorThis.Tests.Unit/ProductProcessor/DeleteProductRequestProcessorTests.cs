@@ -49,7 +49,7 @@ namespace RefactorThis.Core.Unit.ProductProcessor
             Func<Task> act = async () => { await _sut.DeleteProductAsync(It.IsAny<Guid>()); };
 
             // Assert
-            await act.Should().ThrowAsync<KeyNotFoundException>().WithMessage("Product not found");
+            await act.Should().ThrowAsync<ArgumentException>().WithMessage("Product not exists");
         }
     }
 }

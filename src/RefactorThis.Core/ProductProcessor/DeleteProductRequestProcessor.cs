@@ -24,7 +24,7 @@ namespace RefactorThis.Core.ProductProcessor
             var existProduct = await _productRepository.GetAsync(id);
             if (existProduct is null)
             {
-                throw new KeyNotFoundException("Product not found");
+                throw new ArgumentException("Product not exists");
             }
 
             await _productRepository.DeleteProductAsync(id);
