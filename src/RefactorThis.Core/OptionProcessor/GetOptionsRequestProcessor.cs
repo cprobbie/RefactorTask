@@ -12,7 +12,7 @@ namespace RefactorThis.Core.OptionProcessor
     public interface IGetOptionsRequestProcessor
     {
         Task<ProductOptionsDto> ListOptionsAsync(Guid productId);
-        Task<ProductOption> GetOptionByIdAsync(Guid productId, Guid optionId);
+        Task<Option> GetOptionByIdAsync(Guid productId, Guid optionId);
     }
     public class GetOptionsRequestProcessor : IGetOptionsRequestProcessor
     {
@@ -33,7 +33,7 @@ namespace RefactorThis.Core.OptionProcessor
             return new ProductOptionsDto(options);
         }
 
-        public async Task<ProductOption> GetOptionByIdAsync(Guid productId, Guid optionId)
+        public async Task<Option> GetOptionByIdAsync(Guid productId, Guid optionId)
         {
             var option = await _productRepository.GetOptionAsync(productId, optionId);
             if (option is null)

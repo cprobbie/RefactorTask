@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using RefactorThis.Core.Domain;
 using RefactorThis.Core.Interfaces;
 
-
 namespace RefactorThis.Infrastructure
 {
     public class ProductRepository : IProductRepository
@@ -31,9 +30,9 @@ namespace RefactorThis.Infrastructure
                 .Where(x => x.Name.ToLower() == name.ToLower()).ToListAsync();
         }
 
-        public async Task<IList<ProductOption>> ListOptionsAsync(Guid productId)
+        public async Task<IList<Option>> ListOptionsAsync(Guid productId)
         {
-            return await _dbContext.ProductOptions
+            return await _dbContext.Options
                 .Where(x => x.ProductId == productId).ToListAsync();
         }
         public async Task<Product> GetAsync(Guid id)
@@ -42,9 +41,9 @@ namespace RefactorThis.Infrastructure
                 .SingleOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<ProductOption> GetOptionAsync(Guid productId, Guid optionId)
+        public async Task<Option> GetOptionAsync(Guid productId, Guid optionId)
         {
-            return await _dbContext.ProductOptions.AsNoTracking()
+            return await _dbContext.Options.AsNoTracking()
                 .SingleOrDefaultAsync(x => x.ProductId == productId && x.Id == optionId);
         }
 
@@ -54,9 +53,9 @@ namespace RefactorThis.Infrastructure
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task SaveAsync(ProductOption productOption)
+        public async Task SaveAsync(Option productOption)
         {
-            await _dbContext.ProductOptions.AddAsync(productOption);
+            await _dbContext.Options.AddAsync(productOption);
             await _dbContext.SaveChangesAsync();
         }
 
@@ -66,7 +65,7 @@ namespace RefactorThis.Infrastructure
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(ProductOption option)
+        public async Task UpdateAsync(Option option)
         {
             _dbContext.Update(option);
             await _dbContext.SaveChangesAsync();
@@ -77,10 +76,18 @@ namespace RefactorThis.Infrastructure
             _dbContext.Remove(product);
             await _dbContext.SaveChangesAsync();
         }
-        public async Task DeleteOptionAsync(ProductOption option)
+        public async Task DeleteOptionAsync(Option option)
         {
             _dbContext.Attach(option);
             _dbContext.Remove(option);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task SaveAsync(Product product, ProductOption productOption, Option option)
+        {
+            await _dbContext.Products.AddAsync(product);
+            await _dbContext.ProductOption.AddAsync(productOption);
+            await _dbContext.Options.AddAsync(option);
             await _dbContext.SaveChangesAsync();
         }
     }

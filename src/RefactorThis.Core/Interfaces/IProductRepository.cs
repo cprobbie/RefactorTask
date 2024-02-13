@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using RefactorThis.Core.Domain;
+using RefactorThis.Infrastructure;
 
 namespace RefactorThis.Core.Interfaces
 {
@@ -14,10 +15,11 @@ namespace RefactorThis.Core.Interfaces
         public Task<Product> GetAsync(Guid id);
         public Task UpdateAsync(Product product);
         public Task DeleteProductAsync(Product product);
-        public Task DeleteOptionAsync(ProductOption option);
-        public Task<IList<ProductOption>> ListOptionsAsync(Guid productId);
-        public Task<ProductOption> GetOptionAsync(Guid productId, Guid optionId);
-        public Task SaveAsync(ProductOption productOption);
-        public Task UpdateAsync(ProductOption option);
+        public Task DeleteOptionAsync(Option option);
+        public Task<IList<Option>> ListOptionsAsync(Guid productId);
+        public Task<Option> GetOptionAsync(Guid productId, Guid optionId);
+        public Task SaveAsync(Option productOption);
+        public Task UpdateAsync(Option option);
+        Task SaveAsync(Product product, ProductOption productOption, Option option);
     }
 }

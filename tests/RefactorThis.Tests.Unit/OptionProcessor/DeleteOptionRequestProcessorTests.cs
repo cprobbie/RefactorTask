@@ -17,14 +17,14 @@ namespace RefactorThis.Core.Unit.OptionProcessor
     {
         private Mock<IProductRepository> _productRepositoryMock;
         private DeleteOptionRequestProcessor _sut;
-        private ProductOption _option;
+        private Option _option;
 
         [SetUp]
         public void Setup()
         {
             _productRepositoryMock = new Mock<IProductRepository>();
             _sut = new DeleteOptionRequestProcessor(_productRepositoryMock.Object);
-            _option = new ProductOption(Guid.NewGuid(), "32G", "32G storage");
+            _option = new Option(Guid.NewGuid(), "32G", "32G storage");
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
         public async Task GivenOptionIdNonExists_ShouldThrowArgumentException()
         {
             // Arrange
-            _productRepositoryMock.Setup(x => x.GetOptionAsync(It.IsAny<Guid>(), _option.Id)).Returns(Task.FromResult((ProductOption)null));
+            _productRepositoryMock.Setup(x => x.GetOptionAsync(It.IsAny<Guid>(), _option.Id)).Returns(Task.FromResult((Option)null));
 
             // Act 
             Func<Task> act = async () => { await _sut.DeleteProductOptionAsync(It.IsAny<Guid>(), It.IsAny<Guid>()); };

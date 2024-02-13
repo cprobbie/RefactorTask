@@ -32,7 +32,7 @@ namespace RefactorThis.Core.OptionProcessor
             {
                 throw new ArgumentException("Product Option not exists, update failed");
             }
-            var option = new ProductOption(optionId, productId, optionRequest);
+            var option = new Option(optionId, productId, optionRequest);
             await _productRepository.UpdateAsync(option);
         }
     }

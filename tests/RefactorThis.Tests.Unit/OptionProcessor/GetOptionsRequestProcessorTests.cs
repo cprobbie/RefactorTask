@@ -29,20 +29,20 @@ namespace RefactorThis.Core.Unit.OptionProcessor
             var id1 = Guid.NewGuid();
             var id2 = Guid.NewGuid();
 
-            var options = new List<ProductOption>
+            var options = new List<Option>
             {
-                new ProductOption(id1, "32G", "32G storage"),
-                new ProductOption(id2, "64G", "64G storage")
+                new Option(id1, "32G", "32G storage"),
+                new Option(id2, "64G", "64G storage")
             };
 
             var expectedDto = new ProductOptionsDto(options);
             
-            var queryList = new List<ProductOption>
+            var queryList = new List<Option>
             {
-                new ProductOption(id1, "32G", "32G storage"),
-                new ProductOption(id2, "64G", "64G storage")
+                new Option(id1, "32G", "32G storage"),
+                new Option(id2, "64G", "64G storage")
             };
-            IList<ProductOption> queryResult = queryList;
+            IList<Option> queryResult = queryList;
 
             var sut = new GetOptionsRequestProcessor(_productRepositoryMock.Object);
             _productRepositoryMock.Setup(x => x.ListOptionsAsync(It.IsAny<Guid>())).Returns(Task.FromResult(queryResult));
@@ -60,7 +60,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
         {
             // Arrange
             var sut = new GetOptionsRequestProcessor(_productRepositoryMock.Object);
-            _productRepositoryMock.Setup(x => x.ListOptionsAsync(It.IsAny<Guid>())).Returns(Task.FromResult((IList<ProductOption>)null));
+            _productRepositoryMock.Setup(x => x.ListOptionsAsync(It.IsAny<Guid>())).Returns(Task.FromResult((IList<Option>)null));
 
             // Act 
             Func<Task> act = async () => { await sut.ListOptionsAsync(It.IsAny<Guid>()); };
@@ -74,8 +74,8 @@ namespace RefactorThis.Core.Unit.OptionProcessor
         {
             // Arrange
             var sut = new GetOptionsRequestProcessor(_productRepositoryMock.Object);
-            var optionList = new List<ProductOption>();
-            IList<ProductOption> queryResult = optionList;
+            var optionList = new List<Option>();
+            IList<Option> queryResult = optionList;
             _productRepositoryMock.Setup(x => x.ListOptionsAsync(It.IsAny<Guid>())).Returns(Task.FromResult(queryResult));
 
             // Act 
@@ -102,8 +102,8 @@ namespace RefactorThis.Core.Unit.OptionProcessor
             // Arrange
             var id = Guid.NewGuid();
 
-            var expectedOption = new ProductOption(id, "32G", "32G storage");
-            var queryResult = new ProductOption(id, "32G", "32G storage");
+            var expectedOption = new Option(id, "32G", "32G storage");
+            var queryResult = new Option(id, "32G", "32G storage");
 
 
             var sut = new GetOptionsRequestProcessor(_productRepositoryMock.Object);
@@ -122,7 +122,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
         {
             // Arrange
             var sut = new GetOptionsRequestProcessor(_productRepositoryMock.Object);
-            _productRepositoryMock.Setup(x => x.GetOptionAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(Task.FromResult((ProductOption)null));
+            _productRepositoryMock.Setup(x => x.GetOptionAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(Task.FromResult((Option)null));
 
             // Act 
             Func<Task> act = async () => { await sut.GetOptionByIdAsync(It.IsAny<Guid>(), It.IsAny<Guid>()); };

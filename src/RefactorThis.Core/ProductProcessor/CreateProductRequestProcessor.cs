@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using RefactorThis.Core.Domain;
 using RefactorThis.Core.Domain.Requests;
 using RefactorThis.Core.Interfaces;
+using RefactorThis.Infrastructure;
 
 namespace RefactorThis.Core.ProductProcessor
 {
@@ -31,8 +32,11 @@ namespace RefactorThis.Core.ProductProcessor
             {
                 throw new ArgumentException("Invalid input amount");
             }
+
             var product = new Product(request);
-            await _productRepository.SaveAsync(product);
+            var option = _productRepository.GetOptionAsync();
+            var productOption = new ProductOption(product.Id, option.Id); 
+            await _productRepository.SaveAsync(product, productOption,);
         }
     }
 }

@@ -4,8 +4,8 @@ namespace RefactorThis.Core.Domain.DTOs
 {
     public class ProductOptionsDto
     {
-        public IList<ProductOption> Items { get; set; }
-        public ProductOptionsDto(IList<ProductOption> options)
+        public IList<Option> Items { get; set; }
+        public ProductOptionsDto(IList<Option> options)
         {
             Items = options;
         }

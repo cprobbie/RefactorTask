@@ -9,12 +9,13 @@ namespace RefactorThis.Infrastructure
             : base(options){}
 
         public DbSet<Product> Products { get; set; }
-        public DbSet<ProductOption> ProductOptions { get; set; }
+        public DbSet<ProductOption> ProductOption { get; set; }
+        public DbSet<Option> Options { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>().HasKey(x => x.Id);
-            modelBuilder.Entity<ProductOption>().HasKey(x => x.Id);
+            modelBuilder.Entity<Option>().HasKey(x => x.Id);
         }
     }
 

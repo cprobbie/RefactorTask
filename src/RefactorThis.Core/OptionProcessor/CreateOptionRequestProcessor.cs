@@ -33,7 +33,7 @@ namespace RefactorThis.Core.OptionProcessor
                 throw new ArgumentException("Product does not exist");
             }
 
-            var option = new ProductOption(productId, optionRequest);
+            var option = new Option(productId, optionRequest);
             await _productRepository.SaveAsync(option);
         }
     }

@@ -29,7 +29,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
             _fixture = new Fixture();
             _productRepositoryMock = new Mock<IProductRepository>();
             _sut = new CreateOptionRequestProcessor(_productRepositoryMock.Object);
-            _productRepositoryMock.Setup(x => x.SaveAsync(It.IsAny<ProductOption>())).Returns(Task.CompletedTask);
+            _productRepositoryMock.Setup(x => x.SaveAsync(It.IsAny<Option>())).Returns(Task.CompletedTask);
             _product = _fixture.Create<Product>();
         }
 
@@ -44,7 +44,7 @@ namespace RefactorThis.Core.Unit.OptionProcessor
             await _sut.CreateProductOptionAsync(It.IsAny<Guid>(), optionRequest);
 
             // Assert
-            _productRepositoryMock.Verify(x => x.SaveAsync(It.IsAny<ProductOption>()), Times.Once);
+            _productRepositoryMock.Verify(x => x.SaveAsync(It.IsAny<Option>()), Times.Once);
         }
 
         [TestCase("name", null)]

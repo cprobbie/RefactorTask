@@ -1,39 +1,17 @@
 ﻿using System;
-using System.Text.Json.Serialization;
 
-using RefactorThis.Core.Domain.Requests;
-
-namespace RefactorThis.Core.Domain
+namespace RefactorThis.Infrastructure
 {
     public class ProductOption
     {
-        public ProductOption(Guid productId, CreateProductOptionRequest optionRequest)
+        public ProductOption(Guid productFk, Guid optionFk)
         {
             Id = Guid.NewGuid();
-            Name = optionRequest.Name;
-            Description = optionRequest.Description;
-            ProductId = productId;
+            ProductFk = productFk;
+            OptionFk = optionFk;
         }
-
-        public ProductOption(Guid id, string name, string description)
-        {
-            Id = id;
-            Name = name;
-            Description = description;
-        }
-
-        public ProductOption(Guid id, Guid productId, UpdateProductOptionRequest optionRequest)
-        {
-            Id = id;
-            Name = optionRequest.Name;
-            Description = optionRequest.Description;
-            ProductId = productId;
-        }
-
         public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        [JsonIgnore]
-        public Guid ProductId { get; set; }
+        public Guid ProductFk { get; set; }
+        public Guid OptionFk { get; set; }
     }
 }
