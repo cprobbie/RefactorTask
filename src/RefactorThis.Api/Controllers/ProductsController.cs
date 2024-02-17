@@ -1,74 +1,82 @@
 ﻿using System;
 using System.Threading.Tasks;
-
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-
 using RefactorThis.Core.Domain.Requests;
-using RefactorThis.Core.ProductProcessor;
+using RefactorThis.Core.Interfaces;
 
 namespace RefactorThis.Api.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class ProductsController(ILogger<ProductsController> logger, IProductService productService)
+        : ControllerBase
     {
-        private readonly ILogger<ProductsController> _logger;
-        private readonly ICreateProductRequestProcessor _createProductRequestProcessor;
-        private readonly IGetProductRequestProcessor _getProductRequestProcessor;
-        private readonly IUpdateProductRequestProcessor _updateProductRequestProcessor;
-        private readonly IDeleteProductRequestProcessor _deleteProductRequestProcessor;
-
-        public ProductsController(ILogger<ProductsController> logger,
-            ICreateProductRequestProcessor createProductRequestProcessor, 
-            IGetProductRequestProcessor getProductRequestProcessor,
-            IUpdateProductRequestProcessor updateProductRequestProcessor,
-            IDeleteProductRequestProcessor deleteProductRequestProcessor)
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetAll([FromQuery]string? name)
         {
-            _logger = logger;
-            _createProductRequestProcessor = createProductRequestProcessor;
-            _getProductRequestProcessor = getProductRequestProcessor;
-            _updateProductRequestProcessor = updateProductRequestProcessor;
-            _deleteProductRequestProcessor = deleteProductRequestProcessor;
+            return Ok(name is null
+                ? await productService.ListProductsAsync()
+                : await productService.GetProductByNameAsync(name));
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery]string name)
+        [Route("{id:guid}", Name = "GetProductById")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetProductById(Guid id)
         {
-            var products = await _getProductRequestProcessor.ListProductsAsync(name);
-            _logger.LogInformation("List products successfully");
-            return Ok(products);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id)
-        {
-            var product = await _getProductRequestProcessor.GetProductByIdAsync(id);
-            _logger.LogInformation($"Get product(Id: {id}) successfully");
-            return Ok(product);
+            var product = await productService.GetProductByIdAsync(id);
+            logger.LogInformation("Get product(Id: {id}) successfully", id);
+            return product is null ? NotFound() : Ok(product);
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Post([FromBody]CreateProductRequest productRequest)
         {
-            await _createProductRequestProcessor.CreateProductAsync(productRequest);
-            _logger.LogInformation("Create product successfully");
-            return Ok();
+            var result = await productService.CreateProductAsync(productRequest);
+            
+            if (result.IsFailure)
+                return BadRequest(result.Error);
+            
+            logger.LogInformation("Create product(Id: {id}) successfully", result.Value);
+            return Created("api/v1/Products", new { id = result.Value });
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Update(Guid id, [FromBody]UpdateProductRequest product)
         {
-            await _updateProductRequestProcessor.UpdateProductAsync(id, product);
-            _logger.LogInformation($"Update product(Id: {id}) successfully");
+            var result = await productService.UpdateProductAsync(id, product);
+            
+            if (result.IsFailure)
+                return BadRequest(result.Error);
+            
+            logger.LogInformation("Update product(Id: {id}) successfully", id);
             return Ok();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await _deleteProductRequestProcessor.DeleteProductAsync(id);
-            _logger.LogInformation($"Delete product(Id: {id}) successfully");
+            var result = await productService.DeleteProductAsync(id);
+            
+            if (result.IsFailure)
+                return BadRequest(result.Error);
+            
+            logger.LogInformation("Delete product(Id: {id}) successfully", id);
             return Ok();
         }
     }

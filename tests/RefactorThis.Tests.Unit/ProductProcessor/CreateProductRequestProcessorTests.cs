@@ -13,7 +13,7 @@ using RefactorThis.Core.ProductProcessor;
 namespace RefactorThis.Core.Unit.ProductProcessor
 {
     [TestFixture]
-    public class CreateProductRequestProcessorTests
+    public class ProductServiceTests
     {
         private Fixture _fixture;
         private Mock<IProductRepository> _productRepositoryMock;

@@ -5,90 +5,70 @@ using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 
-using RefactorThis.Core.Domain;
+using RefactorThis.Core.Domain.EntityModels;
 using RefactorThis.Core.Interfaces;
 
 namespace RefactorThis.Infrastructure
 {
-    public class ProductRepository : IProductRepository
+    public class ProductRepository(ProductDbContext dbContext) : IProductRepository
     {
-        private readonly ProductDbContext _dbContext;
+        public async Task<ICollection<Product>> ListAsync() => await dbContext.Products.ToListAsync();
 
-        public ProductRepository(ProductDbContext dbContext)
+        public async Task<ICollection<ProductOption>> ListOptionsAsync(Guid productId)
         {
-            _dbContext = dbContext;
-        }
-
-        public async Task<IList<Product>> ListAsync()
-        {
-            return await _dbContext.Products.ToListAsync();
-        }
-
-        public async Task<IList<Product>> ListAsync(string name)
-        {
-            return await _dbContext.Products
-                .Where(x => x.Name.ToLower() == name.ToLower()).ToListAsync();
-        }
-
-        public async Task<IList<Option>> ListOptionsAsync(Guid productId)
-        {
-            return await _dbContext.Options
+            return await dbContext.ProductOptions
                 .Where(x => x.ProductId == productId).ToListAsync();
         }
-        public async Task<Product> GetAsync(Guid id)
+        public async Task<Product?> GetAsync(Guid id)
         {
-            return await _dbContext.Products.AsNoTracking()
+            return await dbContext.Products.AsNoTracking()
                 .SingleOrDefaultAsync(x => x.Id == id);
         }
-
-        public async Task<Option> GetOptionAsync(Guid productId, Guid optionId)
+        
+        public async Task<Product?> GetAsync(string name)
         {
-            return await _dbContext.Options.AsNoTracking()
+            return await dbContext.Products
+                .SingleOrDefaultAsync(p => p.Name.ToLower() == name.ToLower());
+        }
+
+        public async Task<ProductOption?> GetOptionAsync(Guid productId, Guid optionId)
+        {
+            return await dbContext.ProductOptions.AsNoTracking()
                 .SingleOrDefaultAsync(x => x.ProductId == productId && x.Id == optionId);
         }
 
         public async Task SaveAsync(Product product)
         {
-            await _dbContext.Products.AddAsync(product);
-            await _dbContext.SaveChangesAsync();
+            await dbContext.Products.AddAsync(product);
+            await dbContext.SaveChangesAsync();
         }
 
-        public async Task SaveAsync(Option productOption)
+        public async Task SaveAsync(ProductOption productOption)
         {
-            await _dbContext.Options.AddAsync(productOption);
-            await _dbContext.SaveChangesAsync();
+            await dbContext.ProductOptions.AddAsync(productOption);
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Product product)
         {
-            _dbContext.Update(product);
-            await _dbContext.SaveChangesAsync();
+            dbContext.Update(product);
+            await dbContext.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(Option option)
+        public async Task UpdateAsync(ProductOption option)
         {
-            _dbContext.Update(option);
-            await _dbContext.SaveChangesAsync();
+            dbContext.Update(option);
+            await dbContext.SaveChangesAsync();
         }
         public async Task DeleteProductAsync(Product product)
         {
-            _dbContext.Attach(product);
-            _dbContext.Remove(product);
-            await _dbContext.SaveChangesAsync();
+            dbContext.Remove(product);
+            await dbContext.SaveChangesAsync();
         }
-        public async Task DeleteOptionAsync(Option option)
+        public async Task DeleteOptionAsync(ProductOption option)
         {
-            _dbContext.Attach(option);
-            _dbContext.Remove(option);
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task SaveAsync(Product product, ProductOption productOption, Option option)
-        {
-            await _dbContext.Products.AddAsync(product);
-            await _dbContext.ProductOption.AddAsync(productOption);
-            await _dbContext.Options.AddAsync(option);
-            await _dbContext.SaveChangesAsync();
+            dbContext.Remove(option);
+            await dbContext.SaveChangesAsync();
         }
     }
 }

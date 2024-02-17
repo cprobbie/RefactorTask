@@ -1,11 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
 
     <RootNamespace>RefactorThis.Core.Unit</RootNamespace>
+
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,11 +16,26 @@
     <PackageReference Include="Moq" Version="4.14.5" />
     <PackageReference Include="nunit" Version="3.12.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\RefactorThis.Core\RefactorThis.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="OptionProcessor\**" />
+    <Compile Remove="ProductProcessor\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="OptionProcessor\**" />
+    <EmbeddedResource Remove="ProductProcessor\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="OptionProcessor\**" />
+    <None Remove="ProductProcessor\**" />
   </ItemGroup>
 
 </Project>

@@ -1,41 +1,82 @@
 ﻿using System;
-
+using CSharpFunctionalExtensions;
 using RefactorThis.Core.Domain.Requests;
 
-namespace RefactorThis.Core.Domain
+namespace RefactorThis.Core.Domain;
+
+public class Product
 {
-    public class Product
+    private Product(CreateProductRequest request)
     {
-        public Product(CreateProductRequest request)
-        {
-            Id = Guid.NewGuid();
-            Name = request.Name;
-            Description = request.Description;
-            Price = request.Price;
-            DeliveryPrice = request.DeliveryPrice;
-        }
+        Id = Guid.NewGuid();
+        Name = request.Name;
+        Description = request.Description;
+        Price = decimal.Round(request.Price, 2);
+        DeliveryPrice = decimal.Round(request.DeliveryPrice, 2);
+    }
 
-        public Product(Guid id, UpdateProductRequest request)
-        {
-            Id = id;
-            Name = request.Name;
-            Description = request.Description;
-            Price = request.Price;
-            DeliveryPrice = request.DeliveryPrice;
-        }
+    private Product(Guid id, UpdateProductRequest request)
+    {
+        Id = id;
+        Name = request.Name;
+        Description = request.Description;
+        Price = decimal.Round(request.Price, 2);
+        DeliveryPrice = decimal.Round(request.DeliveryPrice, 2);
+    }
 
-        public Product(Guid id, string name, string description, decimal price, decimal deliveryPrice)
+    private Product(EntityModels.Product entity)
+    {
+        Id = entity.Id;
+        Name = entity.Name;
+        Description = entity.Description;
+        Price = entity.Price;
+        DeliveryPrice = entity.DeliveryPrice;
+    }
+        
+    public Guid Id { get; }
+    public string Name { get; }
+    public string Description { get; }
+    public decimal Price { get; }
+    public decimal DeliveryPrice { get; }
+
+    public static Result<Product> CreateProductFromRequest(CreateProductRequest request)
+    {
+        try
         {
-            Id = id;
-            Name = name;
-            Description = description;
-            Price = price;
-            DeliveryPrice = deliveryPrice;
+            ValidateRequest(request);
         }
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public decimal Price { get; set; }
-        public decimal DeliveryPrice { get; set; }
+        catch (ArgumentException ex)
+        {
+            return Result.Failure<Product>(ex.Message);
+        }
+        return new Product(request);
+    }
+
+    public static Result<Product> CreateProductFromUpdateRequest(Guid id, UpdateProductRequest request)
+    {
+        try
+        {
+            ValidateRequest(request);
+        }
+        catch (ArgumentException ex)
+        {
+            return Result.Failure<Product>(ex.Message);
+        }
+        return new Product(id, request);
+    }
+
+    private static void ValidateRequest(BaseProductRequest request)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.Name);
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.Description);
+        if (request.Price <= 0 || request.DeliveryPrice < 0)
+        {
+            throw new ArgumentException("Invalid amount");
+        }
+    }
+
+    public static Product? MapFromEntity(EntityModels.Product? entity)
+    {
+        return entity is null ? null : new Product(entity);
     }
 }

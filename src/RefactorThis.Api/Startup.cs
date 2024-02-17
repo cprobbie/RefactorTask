@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RefactorThis.Core.Interfaces;
+using RefactorThis.Core.Services;
 using RefactorThis.Infrastructure;
 
 namespace RefactorThis.Api
@@ -25,11 +26,12 @@ namespace RefactorThis.Api
                 options.UseSqlite(Configuration.GetConnectionString("Sqlite"));
             });
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IProductOptionService, ProductOptionsService>();
 
             services.AddControllers(options => { options.Filters.Add(typeof(ExceptionFilter));})
                     .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
-
-            Core.Bootstrap.ConfigureServices(services);
+            
             services.AddSwaggerGen();
         }
 
