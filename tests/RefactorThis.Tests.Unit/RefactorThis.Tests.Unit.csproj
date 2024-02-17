@@ -11,31 +11,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoFixture" Version="4.13.0" />
-    <PackageReference Include="FluentAssertions" Version="5.10.3" />
+    <PackageReference Include="FluentAssertions" Version="6.12.0" />
     <PackageReference Include="Moq" Version="4.14.5" />
-    <PackageReference Include="nunit" Version="3.12.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+    <PackageReference Include="xunit" Version="2.7.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit"/>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\RefactorThis.Core\RefactorThis.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="OptionProcessor\**" />
-    <Compile Remove="ProductProcessor\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Remove="OptionProcessor\**" />
-    <EmbeddedResource Remove="ProductProcessor\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="OptionProcessor\**" />
-    <None Remove="ProductProcessor\**" />
   </ItemGroup>
 
 </Project>
