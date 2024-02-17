@@ -4,8 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
-
-using RefactorThis.Core.Domain.EntityModels;
+using RefactorThis.Core.DTOs.EntityModels;
 using RefactorThis.Core.Interfaces;
 
 namespace RefactorThis.Infrastructure

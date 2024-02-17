@@ -2,8 +2,8 @@ using System;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using RefactorThis.Core.Domain;
-using RefactorThis.Core.Domain.Requests;
-using RefactorThis.Core.Domain.Responses;
+using RefactorThis.Core.DTOs.Requests;
+using RefactorThis.Core.DTOs.Responses;
 
 namespace RefactorThis.Core.Interfaces;
 

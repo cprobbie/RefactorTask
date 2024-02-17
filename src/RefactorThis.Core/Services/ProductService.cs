@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using RefactorThis.Core.Domain;
-using RefactorThis.Core.Domain.Requests;
-using RefactorThis.Core.Domain.Responses;
+using RefactorThis.Core.DTOs.Requests;
+using RefactorThis.Core.DTOs.Responses;
 using RefactorThis.Core.Interfaces;
 
 namespace RefactorThis.Core.Services;
@@ -36,7 +36,7 @@ public class ProductService(IProductRepository productRepository) : IProductServ
         if (isFailure)
             return Result.Failure<Guid>(error);
 
-        await productRepository.SaveAsync(new Domain.EntityModels.Product
+        await productRepository.SaveAsync(new DTOs.EntityModels.Product
         {
             Id = product.Id,
             Name = product.Name,
@@ -59,7 +59,7 @@ public class ProductService(IProductRepository productRepository) : IProductServ
         if (existProduct is null)
             return Result.Failure("Product does not exist");
         
-        await productRepository.UpdateAsync(new Domain.EntityModels.Product
+        await productRepository.UpdateAsync(new DTOs.EntityModels.Product
         {
             Id = id,
             Name = product.Name,

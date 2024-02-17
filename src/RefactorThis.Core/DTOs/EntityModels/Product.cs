@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using RefactorThis.Core.Domain.Requests;
 
-namespace RefactorThis.Core.Domain.EntityModels;
+namespace RefactorThis.Core.DTOs.EntityModels;
 
 public class Product
 {

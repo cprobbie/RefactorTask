@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
-using RefactorThis.Core.Domain.EntityModels;
+using RefactorThis.Core.DTOs.EntityModels;
 
 namespace RefactorThis.Core.Interfaces
 {

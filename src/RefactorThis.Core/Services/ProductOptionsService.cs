@@ -3,9 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using RefactorThis.Core.Domain;
-using RefactorThis.Core.Domain.EntityModels;
-using RefactorThis.Core.Domain.Requests;
-using RefactorThis.Core.Domain.Responses;
+using RefactorThis.Core.DTOs.EntityModels;
+using RefactorThis.Core.DTOs.Requests;
+using RefactorThis.Core.DTOs.Responses;
 using RefactorThis.Core.Interfaces;
 
 namespace RefactorThis.Core.Services;

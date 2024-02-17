@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using RefactorThis.Core.Domain.Requests;
+using RefactorThis.Core.DTOs.Requests;
 using RefactorThis.Core.Interfaces;
 
 namespace RefactorThis.Api.Controllers

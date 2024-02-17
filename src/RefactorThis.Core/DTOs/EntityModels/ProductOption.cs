@@ -1,13 +1,12 @@
 ﻿using System;
 
-namespace RefactorThis.Core.Domain.EntityModels
+namespace RefactorThis.Core.DTOs.EntityModels;
+
+public class ProductOption
 {
-    public class ProductOption
-    {
-        public Guid Id { get; set; }
-        public Guid ProductId { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public Product Product { get; set; } = null!; // Required reference navigation to principal
-    }
+    public Guid Id { get; set; }
+    public Guid ProductId { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public Product Product { get; set; } = null!; // Required reference navigation to principal
 }

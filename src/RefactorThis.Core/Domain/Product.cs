@@ -1,6 +1,6 @@
 ﻿using System;
 using CSharpFunctionalExtensions;
-using RefactorThis.Core.Domain.Requests;
+using RefactorThis.Core.DTOs.Requests;
 
 namespace RefactorThis.Core.Domain;
 
@@ -24,7 +24,7 @@ public class Product
         DeliveryPrice = decimal.Round(request.DeliveryPrice, 2);
     }
 
-    private Product(EntityModels.Product entity)
+    private Product(DTOs.EntityModels.Product entity)
     {
         Id = entity.Id;
         Name = entity.Name;
@@ -75,7 +75,7 @@ public class Product
         }
     }
 
-    public static Product? MapFromEntity(EntityModels.Product? entity)
+    public static Product? MapFromEntity(DTOs.EntityModels.Product? entity)
     {
         return entity is null ? null : new Product(entity);
     }
