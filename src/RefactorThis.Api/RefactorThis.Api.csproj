@@ -17,4 +17,9 @@
       <ProjectReference Include="..\RefactorThis.Core\RefactorThis.Core.csproj" />
       <ProjectReference Include="..\RefactorThis.Infrastructure\RefactorThis.Infrastructure.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <None Update="App_Data\products.db">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
 </Project>
