@@ -25,11 +25,11 @@ In terms of software architecture, I used a Domain-centric 3-Layer architecture.
 
 ![Layer Dependency Diagram](./assets/dependency_diagram.png)
  
-In my option, this architecture is a good fit for this project as it needs to achieve CRUD functionality and without having complex business logic. This architecture follows Inversion of Control (IoC) principle where API and Infrastructure depend on Domain but Domain does not depend on either of them. 
+In my option, this architecture is a good fit for this project as it needs to achieve CRUD functionality with simple business logic and relationships. This architecture follows Inversion of Control (IoC) principle where API and Infrastructure depend on Core but Core does not a reference on either of them. 
 
 As business logic is centralised in the Core layer within the Domain Models (Product and Option in this case). Unit testing can focus on testing the domain models without any mocks.
 
-To solve the SQL injection vulnerability, I removed all the raw SQL and introduced Entity Framework Core for database access and retained the original database which is Sqlite.
+To solve the SQL injection vulnerability, I removed all the raw SQL and introduced Entity Framework Core for database access while retained the original database which is Sqlite.
 
 I have implemented the following frameworks and Nuget packages to refactor the API to meet production standards:
 
@@ -45,7 +45,7 @@ I have implemented the following frameworks and Nuget packages to refactor the A
 
 ### Prerequesite
 - Install [Microsoft .NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
-- An IDE that supports .NET - Rider was used for development of this project. You should be able to run with VS Code (with a few extensions: `C# Dev Kit` is recommended) and Visual Studio.
+- An IDE that supports .NET - Rider was used for the development of this project. You should be able to run with VS Code (with a few extensions: `C# Dev Kit` is recommended) and the latest Visual Studio.
 - Docker (optional)
 
 ### Command Line Interface
@@ -120,6 +120,9 @@ I have included some example payloads for POST and PUT endpoints below.
   "Description": "the coolest green color"
 }
 ```
+### Unhappy paths
+Validation logic has been implemented. If you try to create/update a new product with negative price, you will get a Bad Request return with an error message.
+You may also try to `Get` a product or an option by providing a wrong Id.
 
 ## Where to check logs
 
