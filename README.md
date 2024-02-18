@@ -1,7 +1,7 @@
 
 ## The Problem
 
-This is a API service which is required to manage products for users.
+This is an API service which is required to manage products for users.
 
 The original code has the following major issues:
 
@@ -29,7 +29,7 @@ In my option, this architecture is a good fit for this project as it needs to ac
 
 As business logic is centralised in the Core layer within the Domain Models (Product and Option in this case). Unit testing can focus on testing the domain models without any mocks.
 
-To solve the SQL injection vulnerability, I removed all the raw SQL and introduced Entity Framework Core for database access while retained the original database which is Sqlite.
+To solve the SQL injection vulnerability, I removed all the raw SQL and introduced Entity Framework Core for database access while retained the original database which is Sqlite that has two pre-seeded tables, Products and ProductOptions with One-to-Many relationship.
 
 I have implemented the following frameworks and Nuget packages to refactor the API to meet production standards:
 
