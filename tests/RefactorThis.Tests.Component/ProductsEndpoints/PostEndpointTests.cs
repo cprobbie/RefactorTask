@@ -5,10 +5,11 @@ using Newtonsoft.Json.Linq;
 using RefactorThis.Api;
 using RefactorThis.Core.DTOs.Requests;
 
-namespace RefactorThis.Tests.Component.Products;
+namespace RefactorThis.Tests.Component.ProductsEndpoints;
 
 public class PostEndpointTests : IClassFixture<WebApplicationFactory<Startup>>
 {
+    private const string BaseRequestUrl = "api/v1/Products";
     private readonly WebApplicationFactory<Startup> _factory;
 
     public PostEndpointTests(WebApplicationFactory<Startup> factory)
@@ -24,7 +25,7 @@ public class PostEndpointTests : IClassFixture<WebApplicationFactory<Startup>>
         var createRequest = new CreateProductRequest("Apple Vision Pro", "MR headset", 3500, 10);
 
         // Act
-        var response = await client.PostAsJsonAsync("api/v1/Products", createRequest);
+        var response = await client.PostAsJsonAsync(BaseRequestUrl, createRequest);
 
         // Assert
         response.EnsureSuccessStatusCode();
@@ -42,7 +43,7 @@ public class PostEndpointTests : IClassFixture<WebApplicationFactory<Startup>>
         var createRequest = new CreateProductRequest("Apple Vision Pro", "MR headset", 3500, -10);
 
         // Act
-        var response = await client.PostAsJsonAsync("api/v1/Products", createRequest);
+        var response = await client.PostAsJsonAsync(BaseRequestUrl, createRequest);
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -53,7 +54,7 @@ public class PostEndpointTests : IClassFixture<WebApplicationFactory<Startup>>
     {
         var content = await response.Content.ReadAsStringAsync();
         var productId = JObject.Parse(content)["id"];
-        await client.DeleteAsync($"api/v1/Products/{productId}");
+        await client.DeleteAsync($"{BaseRequestUrl}/{productId}");
         response.EnsureSuccessStatusCode();
     }
 }

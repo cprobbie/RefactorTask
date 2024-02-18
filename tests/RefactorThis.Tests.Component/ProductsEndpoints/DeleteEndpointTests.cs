@@ -5,10 +5,11 @@ using Newtonsoft.Json.Linq;
 using RefactorThis.Api;
 using RefactorThis.Core.DTOs.Requests;
 
-namespace RefactorThis.Tests.Component.Products;
+namespace RefactorThis.Tests.Component.ProductsEndpoints;
 
 public class DeleteEndpointTests : IClassFixture<WebApplicationFactory<Startup>>
 {
+    private const string BaseRequestUrl = "api/v1/Products";
     private readonly WebApplicationFactory<Startup> _factory;
 
     public DeleteEndpointTests(WebApplicationFactory<Startup> factory)
@@ -25,7 +26,7 @@ public class DeleteEndpointTests : IClassFixture<WebApplicationFactory<Startup>>
         var productId = JObject.Parse(content)["id"]!.ToString();
 
         // Act
-        var response = await client.DeleteAsync($"api/v1/Products/{productId}");
+        var response = await client.DeleteAsync($"{BaseRequestUrl}/{productId}");
 
         // Assert
         response.EnsureSuccessStatusCode();
@@ -35,20 +36,20 @@ public class DeleteEndpointTests : IClassFixture<WebApplicationFactory<Startup>>
     private static async Task<string> SetUpData(HttpClient client)
     {
         var createRequest = new CreateProductRequest("Test product", "to be deleted", 500, 10);
-        var response = await client.PostAsJsonAsync("api/v1/Products", createRequest);
+        var response = await client.PostAsJsonAsync(BaseRequestUrl, createRequest);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadAsStringAsync();
     }
 
     [Fact]
-    public async Task Post_EndpointsReturnBadRequestWhenRequestIsInvalid()
+    public async Task Delete_EndpointsReturnBadRequestWhenRequestIsInvalid()
     {
         // Arrange
+        var productId = Guid.NewGuid();
         var client = _factory.CreateClient();
-        var createRequest = new CreateProductRequest("Apple Vision Pro", "MR headset", 3500, -10);
     
         // Act
-        var response = await client.PostAsJsonAsync("api/v1/Products", createRequest);
+        var response = await client.DeleteAsync($"{BaseRequestUrl}/{productId}");
     
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);

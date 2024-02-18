@@ -2,10 +2,11 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc.Testing;
 using RefactorThis.Api;
 
-namespace RefactorThis.Tests.Component.Products;
+namespace RefactorThis.Tests.Component.ProductsEndpoints;
 
 public class GetEndpointTests : IClassFixture<WebApplicationFactory<Startup>>
 {
+    private const string BaseRequestUrl = "api/v1/Products";
     private readonly WebApplicationFactory<Startup> _factory;
 
     public GetEndpointTests(WebApplicationFactory<Startup> factory)
@@ -20,7 +21,7 @@ public class GetEndpointTests : IClassFixture<WebApplicationFactory<Startup>>
         var client = _factory.CreateClient();
 
         // Act
-        var response = await client.GetAsync("api/v1/Products");
+        var response = await client.GetAsync(BaseRequestUrl);
 
         // Assert
         response.EnsureSuccessStatusCode();
@@ -34,7 +35,7 @@ public class GetEndpointTests : IClassFixture<WebApplicationFactory<Startup>>
         var client = _factory.CreateClient();
 
         // Act
-        var response = await client.GetAsync($"api/v1/Products/{productId}");
+        var response = await client.GetAsync($"{BaseRequestUrl}/{productId}");
 
         // Assert
         response.EnsureSuccessStatusCode();
@@ -48,7 +49,7 @@ public class GetEndpointTests : IClassFixture<WebApplicationFactory<Startup>>
         var client = _factory.CreateClient();
 
         // Act
-        var response = await client.GetAsync($"api/v1/Products/{productId}");
+        var response = await client.GetAsync($"{BaseRequestUrl}/{productId}");
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
