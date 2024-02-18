@@ -25,8 +25,7 @@ COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "RefactorThis.Api.dll"]
 
 
-# Docker CMD
+# Docker CMD at root directory
 # docker build -t refactorthis_api .
 # docker run --rm -p 5000:8080 -e ASPNETCORE_URLS=http://+:8080 refactorthis_api
 # curl http://localhost:5000/ping
-# TODO: Set up a proper database on docker and make a docker-compose file to orchestrate
