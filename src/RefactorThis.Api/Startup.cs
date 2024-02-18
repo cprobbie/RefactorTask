@@ -33,6 +33,7 @@ namespace RefactorThis.Api
                     .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
             
             services.AddSwaggerGen();
+            services.AddHealthChecks();
         }
 
         public void Configure(IApplicationBuilder app,  IWebHostEnvironment env)
@@ -51,10 +52,15 @@ namespace RefactorThis.Api
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "RefactorThis API v1");
             });
-
-            app.UseHttpsRedirection();
+            
+            // app.UseHttpsRedirection();
             app.UseRouting();
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHealthChecks("/ping");
+                endpoints.MapHealthChecks("/healthcheck");
+                endpoints.MapControllers();
+            });
         }
     }
 }
